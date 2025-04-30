@@ -1,4 +1,4 @@
-# yokgobg
+# evently app
 
 A new Flutter project.
 
