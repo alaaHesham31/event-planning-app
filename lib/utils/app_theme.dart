@@ -7,6 +7,8 @@ class AppTheme{
 
   );
  static final ThemeData darkTheme = ThemeData(
+     scaffoldBackgroundColor: AppColors.navyColor
+
 
 
  );
