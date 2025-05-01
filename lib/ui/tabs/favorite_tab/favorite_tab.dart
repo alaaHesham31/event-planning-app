@@ -2,6 +2,7 @@ import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
 import 'package:evently_app/widgets/custom_text_field.dart';
+import 'package:evently_app/widgets/event_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -11,6 +12,7 @@ class FavoriteTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -26,7 +28,19 @@ class FavoriteTab extends StatelessWidget {
                 color: null,
               ),
             ),
-            
+            SizedBox(height: height * 0.02,),
+            Expanded(
+                child: ListView.separated(
+                    itemCount: 10,
+                    separatorBuilder: (context, index){
+                      return   SizedBox(
+                        height: height * 0.02,
+                      );
+                    },
+                    itemBuilder: (context, index) {
+                      return EventItemWidget();
+                    })),
+
           ],
         ),
       ),

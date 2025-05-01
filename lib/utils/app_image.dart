@@ -35,6 +35,8 @@ class AppImage{
   static const String workShop = "assets/images/work_shop_icon.png";
   static const String birthday = "assets/images/birthday_icon.png";
   static const String searchIcon = "assets/images/search_icon.png";
+  static const String profile = "assets/images/profile.png";
+
 
 
 

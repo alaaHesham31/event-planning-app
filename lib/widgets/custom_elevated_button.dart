@@ -26,6 +26,7 @@ class CustomElevatedButton extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             icon ?? SizedBox(),
             SizedBox(

@@ -2,6 +2,7 @@ import 'package:evently_app/ui/onboarding_screen.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
+import 'package:evently_app/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 
 class LetsGoScreen extends StatelessWidget {
@@ -38,6 +39,7 @@ class LetsGoScreen extends StatelessWidget {
             SizedBox(
               height: 30,
             ),
+            // CustomElevatedButton(backgroundColor: AppColors.primaryColor, textStyle: AppStyle.semi20White, text: 'Let\'s Start'),
             ElevatedButton(
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, OnboardingScreen.routeName);

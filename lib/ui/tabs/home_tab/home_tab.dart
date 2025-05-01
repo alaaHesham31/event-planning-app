@@ -106,19 +106,20 @@ class _HomeTabState extends State<HomeTab> {
             height: height * 0.02,
           ),
           Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ListView.separated(
-                    itemCount: 10,
-                    separatorBuilder: (context, index){
-                      return   SizedBox(
-                        height: height * 0.02,
-                      );
-                    },
-                    itemBuilder: (context, index) {
-                      return EventItemWidget();
-                    }),
-              )),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ListView.separated(
+                  itemCount: 10,
+                  separatorBuilder: (context, index) {
+                    return SizedBox(
+                      height: height * 0.02,
+                    );
+                  },
+                  itemBuilder: (context, index) {
+                    return EventItemWidget();
+                  }),
+            ),
+          ),
         ],
       ),
     );
