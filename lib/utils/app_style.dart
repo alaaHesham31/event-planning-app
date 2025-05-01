@@ -34,4 +34,13 @@ class AppStyle {
   static TextStyle bold14White = GoogleFonts.inter(
       fontSize: 14, color: AppColors.whiteColor, fontWeight: FontWeight.w700
   );
+  static TextStyle regular16White = GoogleFonts.inter(
+      fontSize: 16, color: AppColors.whiteColor, fontWeight: FontWeight.w400
+  );
+  static TextStyle bold24White = GoogleFonts.inter(
+      fontSize: 24, color: AppColors.whiteColor, fontWeight: FontWeight.w700
+  );
+  static TextStyle bold16Black = GoogleFonts.inter(
+      fontSize: 16, color: AppColors.blackColor, fontWeight: FontWeight.w700
+  );
 }

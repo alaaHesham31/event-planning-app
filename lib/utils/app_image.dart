@@ -25,6 +25,17 @@ class AppImage{
   static const String iconMapSelected = "assets/images/icon_map_selected.png";
   static const String iconFavoriteSelected = "assets/images/icon_favorite_selected.png";
   static const String iconProfileSelected = "assets/images/icon_profile_selected.png";
+  static const String all = "assets/images/all_icon.png";
+  static const String sport = "assets/images/sport_icon.png";
+  static const String holiday = "assets/images/holiday_icon.png";
+  static const String gaming = "assets/images/gaming_icon.png";
+  static const String eating = "assets/images/eating_icon.png";
+  static const String bookClub = "assets/images/book_club_icon.png";
+  static const String exhibition = "assets/images/exhibition_icon.png";
+  static const String workShop = "assets/images/work_shop_icon.png";
+  static const String birthday = "assets/images/birthday_icon.png";
+
+
 
 
 }

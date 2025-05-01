@@ -8,5 +8,17 @@
 "home" : "الرئسية",
 "map" : "الخريطة",
 "favorite" : "المفضلة",
-"profile" : "الحساب الشخصي"
+"profile" : "الحساب الشخصي",
+"welcomeBack" : "مرحباً بعودتك ✨",
+"all" : "الكل",
+"sport" : "رياضة",
+"birthday" : "عيد ميلاد",
+"meeting" : "اجتماع",
+"gaming" : "ألعاب",
+"eating" : "تناول الطعام",
+"holiday" : "عطلة",
+"bookClub" : "نادي الكتاب",
+"workShop" : "ورشة عمل",
+"exhibition" : "معرض"
+
 }

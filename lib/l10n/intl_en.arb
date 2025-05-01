@@ -8,5 +8,16 @@
 "home" : "Home",
 "map" : "Map",
 "favorite" : "Favorite",
-"profile" : "Profile"
+"profile" : "Profile",
+"welcomeBack" : "Welcome Back ✨",
+"all" : "All",
+"sport" : "Sport",
+"birthday" : "Birthday",
+"meeting" : "Meeting",
+"gaming" : "Gaming",
+"eating" : "Eating",
+"holiday" : "Holiday",
+"bookClub" : "Book Club",
+"workShop" : "Work Shop",
+"exhibition" : "Exhibition"
 }

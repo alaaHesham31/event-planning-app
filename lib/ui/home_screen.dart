@@ -30,9 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryColor,
-      ),
+
       body: tabs[selectedIndex],
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
@@ -55,7 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   selectedIndex = index;
                 });
               },
-              backgroundColor: Theme.of(context).primaryColor,
               selectedLabelStyle: AppStyle.bold14White,
               unselectedLabelStyle: AppStyle.bold14White,
               unselectedItemColor: AppColors.nodeWhiteColor,
