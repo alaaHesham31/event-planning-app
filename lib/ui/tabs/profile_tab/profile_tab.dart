@@ -1,24 +1,22 @@
-import 'package:evently_app/home/language_bottom_sheet.dart';
-import 'package:evently_app/home/theme_bottom_sheet.dart';
 import 'package:evently_app/providers/app_language_provider.dart';
 import 'package:evently_app/providers/app_theme_provider.dart';
+import 'package:evently_app/ui/tabs/profile_tab/language_bottom_sheet.dart';
+import 'package:evently_app/ui/tabs/profile_tab/theme_bottom_sheet.dart';
+import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_style.dart';
 import 'package:evently_app/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../utils/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class HomeScreen extends StatefulWidget {
-  static const String routeName = 'homeScreen';
-
-  const HomeScreen({super.key});
+class ProfileTab extends StatefulWidget {
+  const ProfileTab({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<ProfileTab> createState() => _ProfileTabState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _ProfileTabState extends State<ProfileTab> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -102,8 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       themeProvider.appTheme == AppTheme.lightTheme
-                          ? AppLocalizations.of(context)!.dark
-                          : AppLocalizations.of(context)!.light,
+                          ? AppLocalizations.of(context)!.light
+                          : AppLocalizations.of(context)!.dark,
                       style: AppStyle.bold20Primary,
                     ),
                     Icon(

@@ -1,9 +1,10 @@
-import 'package:evently_app/home/home_screen.dart';
-import 'package:evently_app/home/lets_go_screen.dart';
-import 'package:evently_app/home/onboarding_screen.dart';
+
 import 'package:evently_app/providers/app_language_provider.dart';
 import 'package:evently_app/providers/app_theme_provider.dart';
 import 'package:evently_app/splash_screen.dart';
+import 'package:evently_app/ui/home_screen.dart';
+import 'package:evently_app/ui/lets_go_screen.dart';
+import 'package:evently_app/ui/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';

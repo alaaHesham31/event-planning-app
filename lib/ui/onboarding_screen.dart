@@ -1,4 +1,4 @@
-import 'package:evently_app/home/home_screen.dart';
+import 'package:evently_app/ui/home_screen.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';

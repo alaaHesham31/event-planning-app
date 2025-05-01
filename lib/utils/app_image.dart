@@ -17,7 +17,14 @@ class AppImage{
   static const String meetingImage = "assets/images/meeting_category.png";
   static const String sportImage = "assets/images/sport_category.png";
   static const String workshopImage = "assets/images/workshop_category.png";
-  // static const String eventlyLogo = "";
-  // static const String eventlyLogo = "";
+  static const String homeIcon = "assets/images/home_icon.png";
+  static const String mapIcon = "assets/images/map_icon.png";
+  static const String favoriteIcon = "assets/images/favorite_icon.png";
+  static const String profileIcon = "assets/images/profile_icon.png";
+  static const String iconHomeSelected = "assets/images/icon_home_selected.png";
+  static const String iconMapSelected = "assets/images/icon_map_selected.png";
+  static const String iconFavoriteSelected = "assets/images/icon_favorite_selected.png";
+  static const String iconProfileSelected = "assets/images/icon_profile_selected.png";
+
 
 }
