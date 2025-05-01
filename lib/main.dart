@@ -1,12 +1,22 @@
-import 'package:evently_app/home/home_screen.dart';
-import 'package:evently_app/home/lets_go_screen.dart';
-import 'package:evently_app/home/onboarding_screen.dart';
+
+import 'package:evently_app/providers/app_language_provider.dart';
+import 'package:evently_app/providers/app_theme_provider.dart';
 import 'package:evently_app/splash_screen.dart';
-import 'package:evently_app/utils/app_theme.dart';
+import 'package:evently_app/ui/home_screen.dart';
+import 'package:evently_app/ui/lets_go_screen.dart';
+import 'package:evently_app/ui/onboarding_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => AppThemeProvider()),
+      ChangeNotifierProvider(create: (context) => AppLanguageProvider())
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -14,16 +24,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var languageProvider = Provider.of<AppLanguageProvider>(context);
+    var themeProvider = Provider.of<AppThemeProvider>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: SplashScreen.routeName,
+      initialRoute: HomeScreen.routeName,
       routes: {
         SplashScreen.routeName: (context) => SplashScreen(),
         LetsGoScreen.routeName: (context) => LetsGoScreen(),
         OnboardingScreen.routeName: (context) => OnboardingScreen(),
         HomeScreen.routeName: (context) => HomeScreen()
       },
-      theme: AppTheme.lightTheme,
+      theme: themeProvider.appTheme,
+      locale: Locale(languageProvider.appLanguage),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }
