@@ -36,6 +36,13 @@ class AppImage{
   static const String birthday = "assets/images/birthday_icon.png";
   static const String searchIcon = "assets/images/search_icon.png";
   static const String profile = "assets/images/profile.png";
+  static const String emailIcon = "assets/images/email_icon.png";
+  static const String passwordIcon = "assets/images/password_icon.png";
+  static const String viewIcon = "assets/images/view_icon.png";
+  static const String nameIcon = "assets/images/name_icon.png";
+  static const String googleIcon = "assets/images/google_icon.png";
+
+
 
 
 

@@ -21,6 +21,17 @@
 "workShop" : "Work Shop",
 "exhibition" : "Exhibition",
 "searchForEvent" : "Search for Event",
-"logout" : "Logout"
-
+"logout" : "Logout",
+"email" : "Email",
+"password" : "Password",
+"forgotPassword" : "Forgot Password?",
+"doNotHaveAcc" : "Don’t Have Account ?",
+"createAccount" : "Create Account",
+"login" : "Login",
+"or" : "Or",
+"loginWithGoogle" : "Login With Google",
+"name" : "Name",
+"rePassword" : "Re Password",
+"register" : "Register",
+"alreadyHaveAccount" : "Already Have Account ?"
 }

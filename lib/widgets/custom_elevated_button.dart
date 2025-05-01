@@ -3,16 +3,19 @@ import 'package:evently_app/utils/app_style.dart';
 import 'package:flutter/material.dart';
 
 class CustomElevatedButton extends StatelessWidget {
-  Color backgroundColor;
+  Color? backgroundColor;
+  Color? borderSide;
+
   TextStyle textStyle;
   String text;
   Widget? icon;
 
   CustomElevatedButton(
       {super.key,
-      required this.backgroundColor,
+      this.backgroundColor,
       required this.textStyle,
       required this.text,
+        this.borderSide,
       this.icon});
 
   @override
@@ -20,8 +23,16 @@ class CustomElevatedButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: () {},
       style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        backgroundColor: backgroundColor,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: borderSide ?? AppColors.transparentColor,
+          ),
+          borderRadius: BorderRadius.circular(16),
+
+        ),
+
+        backgroundColor: backgroundColor ?? AppColors.primaryColor,
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),

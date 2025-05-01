@@ -23,7 +23,7 @@ class FavoriteTab extends StatelessWidget {
               hintText: AppLocalizations.of(context)!.searchForEvent,
               hintTextStyle: AppStyle.bold14Primary,
               borderColor: AppColors.primaryColor,
-              iconName: Image.asset(
+              prefixIcon: Image.asset(
                 AppImage.searchIcon,
                 color: null,
               ),

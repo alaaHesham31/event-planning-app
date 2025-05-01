@@ -6,8 +6,8 @@ class CustomTextField extends StatelessWidget {
   String? hintText;
   TextStyle? hintTextStyle;
   TextStyle? textStyle;
-
-  Image? iconName;
+ Image? suffixIcon;
+  Image? prefixIcon;
   Color borderColor;
 
   CustomTextField(
@@ -15,7 +15,8 @@ class CustomTextField extends StatelessWidget {
       required this.textStyle,
       required this.hintText,
       required this.hintTextStyle,
-      this.iconName,
+      this.prefixIcon,
+        this.suffixIcon,
       required this.borderColor});
 
   @override
@@ -25,7 +26,8 @@ class CustomTextField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: hintTextStyle,
-        prefixIcon: iconName,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
         border: OutlineInputBorder(
           borderSide: BorderSide(color: borderColor, width: 1),
           borderRadius: BorderRadius.circular(16),

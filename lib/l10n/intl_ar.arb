@@ -21,7 +21,19 @@
 "workShop" : "ورشة عمل",
 "exhibition" : "معرض",
 "searchForEvent" : "ايحث عن موعد",
-"logout" : "تسجيل خروج"
+"logout" : "تسجيل خروج",
+"email" : "البريد الالكتروني",
+"password" : "كلمية المرور",
+"forgotPassword" : "هل نسيت كلمة المرور ؟",
+"don'tHaveAcc" : "لا تمنلك حساب ؟",
+"createAccount" : "أنشئ حساب",
+"login" : "تسجيل دخول",
+"or" : "أو",
+"loginWithGoogle" : "الدخول باستخدام جوحل",
+"name" : "الاسم",
+"rePassword" : "أعد ادخال كلمة المرور",
+"register" : "التسجيل",
+"alreadyHaveAccount" : "هل لديك حساب بالفعل؟"
 
 
 }
