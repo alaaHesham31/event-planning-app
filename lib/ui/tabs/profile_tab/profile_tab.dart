@@ -5,6 +5,7 @@ import 'package:evently_app/ui/tabs/profile_tab/theme_bottom_sheet.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_style.dart';
 import 'package:evently_app/utils/app_theme.dart';
+import 'package:evently_app/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -75,7 +76,6 @@ class _ProfileTabState extends State<ProfileTab> {
             SizedBox(
               height: height * .02,
             ),
-
             Text(
               AppLocalizations.of(context)!.theme,
               style: AppStyle.bold20Black,
@@ -112,7 +112,21 @@ class _ProfileTabState extends State<ProfileTab> {
                   ],
                 ),
               ),
-            )
+            ),
+            Spacer(),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: CustomElevatedButton(
+                text: AppLocalizations.of(context)!.logout,
+                textStyle: AppStyle.regular20White,
+                backgroundColor: AppColors.redColor,
+                icon: Icon(
+                  Icons.logout,
+                  color: AppColors.whiteColor,
+                  size: 25,
+                ),
+              ),
+            ),
           ],
         ),
       ),

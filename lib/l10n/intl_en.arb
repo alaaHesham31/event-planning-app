@@ -19,5 +19,8 @@
 "holiday" : "Holiday",
 "bookClub" : "Book Club",
 "workShop" : "Work Shop",
-"exhibition" : "Exhibition"
+"exhibition" : "Exhibition",
+"searchForEvent" : "Search for Event",
+"logout" : "Logout"
+
 }

@@ -1,5 +1,5 @@
-import 'package:evently_app/ui/tabs/home_tab/event_item_widget.dart';
-import 'package:evently_app/ui/tabs/home_tab/tab_event_item.dart';
+import 'package:evently_app/widgets/event_item_widget.dart';
+import 'package:evently_app/widgets/tab_event_item.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';

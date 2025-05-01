@@ -19,6 +19,9 @@
 "holiday" : "عطلة",
 "bookClub" : "نادي الكتاب",
 "workShop" : "ورشة عمل",
-"exhibition" : "معرض"
+"exhibition" : "معرض",
+"searchForEvent" : "ايحث عن موعد",
+"logout" : "تسجيل خروج"
+
 
 }
