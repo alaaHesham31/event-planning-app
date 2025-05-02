@@ -2,7 +2,6 @@ import 'package:evently_app/ui/onboarding_screen.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
-import 'package:evently_app/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 
 class LetsGoScreen extends StatelessWidget {

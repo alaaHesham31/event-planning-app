@@ -1,5 +1,5 @@
-import 'package:evently_app/widgets/event_item_widget.dart';
-import 'package:evently_app/widgets/tab_event_item.dart';
+import 'package:evently_app/ui/widgets/event_item_widget.dart';
+import 'package:evently_app/ui/widgets/tab_event_item.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
@@ -91,6 +91,12 @@ class _HomeTabState extends State<HomeTab> {
                           setState(() {});
                         },
                         child: TabEventItem(
+                          backgroundSelectedColor: AppColors.whiteColor,
+                          borderUnSelectedColor: AppColors.whiteColor,
+                          selectedIconColor: AppColors.primaryColor,
+                          unSelectedIconColor: AppColors.whiteColor,
+                          selectedTextStyle: AppStyle.bold14Primary,
+                          unSelectedTextStyle: AppStyle.bold14White,
                           isSelected: selectedIndex == index,
                           eventName: eventsNameList[index],
                           eventIconPath: eventIconsList[index],

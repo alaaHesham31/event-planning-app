@@ -25,7 +25,7 @@
 "email" : "البريد الالكتروني",
 "password" : "كلمية المرور",
 "forgotPassword" : "هل نسيت كلمة المرور ؟",
-"don'tHaveAcc" : "لا تمنلك حساب ؟",
+"doNotHaveAcc": "لا تملك حساب ؟",
 "createAccount" : "أنشئ حساب",
 "login" : "تسجيل دخول",
 "or" : "أو",
@@ -33,7 +33,18 @@
 "name" : "الاسم",
 "rePassword" : "أعد ادخال كلمة المرور",
 "register" : "التسجيل",
-"alreadyHaveAccount" : "هل لديك حساب بالفعل؟"
-
+"alreadyHaveAccount" : "هل لديك حساب بالفعل؟",
+"createEvent": "إنشاء حدث",
+"title": "العنوان",
+"eventTitle": "عنوان الحدث",
+"description": "الوصف",
+"eventDescription": "وصف الحدث",
+"eventDate": "تاريخ الحدث",
+"eventTime": "وقت الحدث",
+"chooseDate": "اختر التاريخ",
+"chooseTime": "اختر الوقت",
+"location": "الموقع",
+"chooseEventLocation": "اختر موقع الحدث",
+"addEvent": "إضافة الحدث"
 
 }

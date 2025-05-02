@@ -1,8 +1,9 @@
+import 'package:evently_app/ui/widgets/custom_elevated_button.dart';
+import 'package:evently_app/ui/widgets/custom_text_field.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
-import 'package:evently_app/widgets/custom_elevated_button.dart';
-import 'package:evently_app/widgets/custom_text_field.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

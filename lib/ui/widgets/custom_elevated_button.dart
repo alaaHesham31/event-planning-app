@@ -9,6 +9,7 @@ class CustomElevatedButton extends StatelessWidget {
   TextStyle textStyle;
   String text;
   Widget? icon;
+  VoidCallback? onClick;
 
   CustomElevatedButton(
       {super.key,
@@ -16,12 +17,13 @@ class CustomElevatedButton extends StatelessWidget {
       required this.textStyle,
       required this.text,
         this.borderSide,
+        this.onClick,
       this.icon});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: onClick,
       style: ElevatedButton.styleFrom(
         elevation: 0,
         shape: RoundedRectangleBorder(
