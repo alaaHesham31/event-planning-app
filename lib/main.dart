@@ -1,4 +1,3 @@
-
 import 'package:evently_app/auth/login/login_screen.dart';
 import 'package:evently_app/auth/regist/register_screen.dart';
 import 'package:evently_app/providers/app_language_provider.dart';
@@ -7,11 +6,19 @@ import 'package:evently_app/splash_screen.dart';
 import 'package:evently_app/ui/home_screen.dart';
 import 'package:evently_app/ui/lets_go_screen.dart';
 import 'package:evently_app/ui/onboarding_screen.dart';
+import 'package:evently_app/ui/tabs/home_tab/add_event/add_event_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => AppThemeProvider()),
@@ -30,16 +37,16 @@ class MyApp extends StatelessWidget {
     var themeProvider = Provider.of<AppThemeProvider>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: LoginScreen.routeName,
+      initialRoute: HomeScreen.routeName,
       routes: {
         SplashScreen.routeName: (context) => SplashScreen(),
         LetsGoScreen.routeName: (context) => LetsGoScreen(),
         OnboardingScreen.routeName: (context) => OnboardingScreen(),
         LoginScreen.routeName: (context) => LoginScreen(),
         RegisterScreen.routeName: (context) => RegisterScreen(),
-
-
         HomeScreen.routeName: (context) => HomeScreen(),
+        AddEventScreen.routeName: (context) => AddEventScreen(),
+
       },
       theme: themeProvider.appTheme,
       locale: Locale(languageProvider.appLanguage),
