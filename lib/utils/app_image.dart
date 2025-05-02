@@ -25,6 +25,32 @@ class AppImage{
   static const String iconMapSelected = "assets/images/icon_map_selected.png";
   static const String iconFavoriteSelected = "assets/images/icon_favorite_selected.png";
   static const String iconProfileSelected = "assets/images/icon_profile_selected.png";
+  static const String all = "assets/images/all_icon.png";
+  static const String sport = "assets/images/sport_icon.png";
+  static const String holiday = "assets/images/holiday_icon.png";
+  static const String gaming = "assets/images/gaming_icon.png";
+  static const String eating = "assets/images/eating_icon.png";
+  static const String bookClub = "assets/images/book_club_icon.png";
+  static const String exhibition = "assets/images/exhibition_icon.png";
+  static const String workShop = "assets/images/work_shop_icon.png";
+  static const String birthday = "assets/images/birthday_icon.png";
+  static const String searchIcon = "assets/images/search_icon.png";
+  static const String profile = "assets/images/profile.png";
+  static const String emailIcon = "assets/images/email_icon.png";
+  static const String passwordIcon = "assets/images/password_icon.png";
+  static const String viewIcon = "assets/images/view_icon.png";
+  static const String nameIcon = "assets/images/name_icon.png";
+  static const String googleIcon = "assets/images/google_icon.png";
+  static const String editIcon = "assets/images/edit_icon.png";
+  static const String eventDateIcon = "assets/images/event_date_icon.png";
+  static const String eventTimeIcon = "assets/images/event_time_icon.png";
+
+
+
+
+
+
+
 
 
 }

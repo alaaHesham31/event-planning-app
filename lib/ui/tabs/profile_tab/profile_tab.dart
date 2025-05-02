@@ -3,6 +3,7 @@ import 'package:evently_app/providers/app_theme_provider.dart';
 import 'package:evently_app/ui/tabs/profile_tab/language_bottom_sheet.dart';
 import 'package:evently_app/ui/tabs/profile_tab/theme_bottom_sheet.dart';
 import 'package:evently_app/utils/app_colors.dart';
+import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
 import 'package:evently_app/utils/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -25,11 +26,49 @@ class _ProfileTabState extends State<ProfileTab> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
-        title: Text(
-          "Event app",
-          style: AppStyle.semi20White,
+        toolbarHeight: height * 0.2,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(64))),
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            // crossAxisAlignment:
+            children: [
+              Image.asset(AppImage.profile),
+              SizedBox(
+                width: 16,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Alaa Hesham',
+                      style: AppStyle.bold24White,
+                    ),
+                    Text(
+                      'alaa.hesham@gmai.com',
+                      style: AppStyle.semi16White,
+                      overflow: TextOverflow.visible,
+                      softWrap: true,
+                    ),
+
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
+
+      // PreferredSize(
+      //   preferredSize: Size.fromHeight(height * 0.2),
+      //   child: Container(
+      //     decoration: BoxDecoration(
+      //         color: AppColors.primaryColor,
+      //         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(64))),
+      //   ),
+      // ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -75,7 +114,6 @@ class _ProfileTabState extends State<ProfileTab> {
             SizedBox(
               height: height * .02,
             ),
-
             Text(
               AppLocalizations.of(context)!.theme,
               style: AppStyle.bold20Black,
@@ -112,7 +150,37 @@ class _ProfileTabState extends State<ProfileTab> {
                   ],
                 ),
               ),
-            )
+            ),
+            Spacer(),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  backgroundColor: AppColors.redColor,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.logout,
+                        color: AppColors.whiteColor,
+                        size: 25,
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text(AppLocalizations.of(context)!.logout,
+                          style: AppStyle.regular20White),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

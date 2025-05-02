@@ -38,6 +38,7 @@ class LetsGoScreen extends StatelessWidget {
             SizedBox(
               height: 30,
             ),
+            // CustomElevatedButton(backgroundColor: AppColors.primaryColor, textStyle: AppStyle.semi20White, text: 'Let\'s Start'),
             ElevatedButton(
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, OnboardingScreen.routeName);
