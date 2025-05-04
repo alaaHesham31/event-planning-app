@@ -1,5 +1,4 @@
 import 'package:evently_app/ui/widgets/custom_text_field.dart';
-import 'package:evently_app/ui/widgets/event_item_widget.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
@@ -39,7 +38,8 @@ class FavoriteTab extends StatelessWidget {
                       );
                     },
                     itemBuilder: (context, index) {
-                      return EventItemWidget();
+                      return Container();
+                        // EventItemWidget();
                     })),
 
           ],

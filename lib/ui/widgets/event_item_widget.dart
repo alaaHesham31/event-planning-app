@@ -1,10 +1,13 @@
+import 'package:evently_app/model/event_model.dart';
 import 'package:evently_app/utils/app_colors.dart';
-import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class EventItemWidget extends StatelessWidget {
-  const EventItemWidget({super.key});
+  Event event;
+
+  EventItemWidget({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,7 @@ class EventItemWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.primaryColor, width: 1),
         image: DecorationImage(
-          image: AssetImage(AppImage.birthdayImage),
+          image: AssetImage(event.image),
           fit: BoxFit.fill,
         ),
       ),
@@ -25,8 +28,10 @@ class EventItemWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            padding: EdgeInsets.symmetric(vertical: height * 0.004, horizontal: width* 0.01),
-            margin: EdgeInsets.symmetric(vertical: height * 0.01, horizontal: width* 0.02),
+            padding: EdgeInsets.symmetric(
+                vertical: height * 0.004, horizontal: width * 0.01),
+            margin: EdgeInsets.symmetric(
+                vertical: height * 0.01, horizontal: width * 0.02),
             decoration: BoxDecoration(
               color: AppColors.nodeWhiteColor,
               borderRadius: BorderRadius.circular(8),
@@ -34,19 +39,19 @@ class EventItemWidget extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  '21',
+                  '${event.eventDate.day}',
                   style: AppStyle.bold20Primary,
                 ),
-                Text(
-                  'Nov',
-                  style: AppStyle.bold20Primary,
-                ),
+                Text(DateFormat('MMM').format(event.eventDate).toUpperCase(),
+                    style: AppStyle.bold20Primary),
               ],
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(vertical: height * 0.01, horizontal: width* 0.02),
-            margin: EdgeInsets.symmetric(vertical: height * 0.01, horizontal: width* 0.02),
+            padding: EdgeInsets.symmetric(
+                vertical: height * 0.01, horizontal: width * 0.02),
+            margin: EdgeInsets.symmetric(
+                vertical: height * 0.01, horizontal: width * 0.02),
             decoration: BoxDecoration(
               color: AppColors.nodeWhiteColor,
               borderRadius: BorderRadius.circular(8),
@@ -55,7 +60,7 @@ class EventItemWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'This is a Birthday Party',
+                  event.title,
                   style: AppStyle.bold16Black,
                 ),
                 Icon(

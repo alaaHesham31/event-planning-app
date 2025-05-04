@@ -1,5 +1,6 @@
 import 'package:evently_app/firebase_utils.dart';
 import 'package:evently_app/model/event_model.dart';
+import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/ui/widgets/custom_elevated_button.dart';
 import 'package:evently_app/ui/widgets/custom_text_field.dart';
 import 'package:evently_app/ui/widgets/tab_event_item.dart';
@@ -8,7 +9,9 @@ import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class AddEventScreen extends StatefulWidget {
   static const String routeName = 'addEventScreen';
@@ -28,12 +31,15 @@ class _AddEventScreenState extends State<AddEventScreen> {
   String formatedTime = '';
   var titleController = TextEditingController();
   var descriptionController = TextEditingController();
+  late EventListProvider eventListProvider;
 
   String selectedImage = '';
   String selectedEvent = '';
 
   @override
   Widget build(BuildContext context) {
+     eventListProvider = Provider.of<EventListProvider>(context);
+
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     List<String> eventsNameList = [
@@ -313,8 +319,25 @@ class _AddEventScreenState extends State<AddEventScreen> {
         eventTime: formatedTime);
     FirebaseUtils.addEventToFireStore(event)
         .timeout(Duration(milliseconds: 500), onTimeout: () {
+          eventListProvider.getAllEvents();
+
       print('event added successfully');
     });
+    // eventListProvider.;
+    Fluttertoast.showToast(
+        msg: "event added successfully",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.SNACKBAR,
+        timeInSecForIosWeb: 1,
+        backgroundColor: AppColors.greyColor,
+        textColor: AppColors.whiteColor,
+        fontSize: 16.0
+    );
+
+    Future.delayed(Duration(milliseconds: 300), () {
+      Navigator.pop(context);
+    });
+
   }
 
   void chooseDate() async {

@@ -26,7 +26,7 @@ class Event {
       description: data['description'],
       image: data['image'],
       eventName: data['eventName'],
-      eventDate: data['eventDate'],
+   eventDate: DateTime.fromMillisecondsSinceEpoch(data['eventDate']),
       eventTime: data['eventTime'],
       isFavourite: data['isFavourite'],
     );

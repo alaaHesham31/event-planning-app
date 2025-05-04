@@ -1,3 +1,5 @@
+
+import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/ui/widgets/event_item_widget.dart';
 import 'package:evently_app/ui/widgets/tab_event_item.dart';
 import 'package:evently_app/utils/app_colors.dart';
@@ -5,6 +7,7 @@ import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class HomeTab extends StatefulWidget {
   HomeTab({super.key});
@@ -17,7 +20,15 @@ class _HomeTabState extends State<HomeTab> {
   int selectedIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+    Provider.of<EventListProvider>(context, listen: false).getAllEvents();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var eventListProvider = Provider.of<EventListProvider>(context);
+
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     List<String> eventsNameList = [
@@ -88,6 +99,9 @@ class _HomeTabState extends State<HomeTab> {
                       return GestureDetector(
                         onTap: () {
                           selectedIndex = index;
+                          String selectedCategory = eventsNameList[index];
+                          eventListProvider
+                              .filterEventsByCategory(selectedCategory);
                           setState(() {});
                         },
                         child: TabEventItem(
@@ -115,16 +129,21 @@ class _HomeTabState extends State<HomeTab> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: ListView.separated(
-                  itemCount: 10,
-                  separatorBuilder: (context, index) {
-                    return SizedBox(
-                      height: height * 0.02,
-                    );
-                  },
-                  itemBuilder: (context, index) {
-                    return EventItemWidget();
-                  }),
+                separatorBuilder: (context, index) {
+                  return SizedBox(
+                    height: height * 0.02,
+                  );
+                },
+                itemCount: eventListProvider.filteredEvents.length,
+                itemBuilder: (context, index) {
+                  return EventItemWidget(
+                      event: eventListProvider.filteredEvents[index]);
+                },
+              ),
             ),
+          ),
+          SizedBox(
+            height: height * 0.02,
           ),
         ],
       ),
