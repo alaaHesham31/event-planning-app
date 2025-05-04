@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:evently_app/auth/login/login_screen.dart';
 import 'package:evently_app/auth/regist/register_screen.dart';
 import 'package:evently_app/providers/app_language_provider.dart';
@@ -14,11 +15,13 @@ import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseFirestore.instance.disableNetwork();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => AppThemeProvider()),
@@ -46,7 +49,6 @@ class MyApp extends StatelessWidget {
         RegisterScreen.routeName: (context) => RegisterScreen(),
         HomeScreen.routeName: (context) => HomeScreen(),
         AddEventScreen.routeName: (context) => AddEventScreen(),
-
       },
       theme: themeProvider.appTheme,
       locale: Locale(languageProvider.appLanguage),
