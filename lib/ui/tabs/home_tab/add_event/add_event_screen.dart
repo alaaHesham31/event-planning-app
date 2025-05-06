@@ -38,7 +38,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
   @override
   Widget build(BuildContext context) {
     eventListProvider = Provider.of<EventListProvider>(context);
-   eventListProvider.getEventsNameList(context);
+    eventListProvider.categoryEventsNameList;
+
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
@@ -64,6 +65,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     ];
     selectedImage = eventImagesList[eventListProvider.selectedIndex];
     selectedEvent = eventListProvider.categoryEventsNameList[eventListProvider.selectedIndex];
+
 
 
     return SafeArea(
@@ -107,7 +109,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                        eventListProvider.changeSelectedIndex(index);
+                          eventListProvider.changeSelectedIndex(index);
                         },
                         child: TabEventItem(
                           backgroundSelectedColor: AppColors.primaryColor,
@@ -171,7 +173,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         textStyle: AppStyle.semi16Black,
                         maxLines: 4,
                         hintText:
-                            AppLocalizations.of(context)!.eventDescription,
+                        AppLocalizations.of(context)!.eventDescription,
                         hintTextStyle: AppStyle.semi16Grey,
                         borderColor: AppColors.greyColor,
                       ),
@@ -306,15 +308,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
         eventName: selectedEvent,
         eventDate: selectedDate!,
         eventTime: formatedTime);
-  await  FirebaseUtils.addEventToFireStore(event)
+    await  FirebaseUtils.addEventToFireStore(event)
         .timeout(Duration(milliseconds: 500), onTimeout: () {
-    eventListProvider.changeSelectedIndex(0);
+      eventListProvider.changeSelectedIndex(0);
       // eventListProvider.getAllEventsList();
     });
     ToastMessage.toastMsg(AppLocalizations.of(context)!.eventAddedSuccessfully);
 
-
-      Navigator.pop(context);
+    Navigator.pop(context);
 
   }
 
@@ -334,7 +335,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   void chooseTime() async {
     var chooseTime =
-        await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    await showTimePicker(context: context, initialTime: TimeOfDay.now());
     selectedTime = chooseTime;
     formatedTime = selectedTime!.format(context);
     setState(() {});

@@ -1,3 +1,4 @@
+import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/ui/tabs/favorite_tab/favorite_tab.dart';
 import 'package:evently_app/ui/tabs/home_tab/add_event/add_event_screen.dart';
 import 'package:evently_app/ui/tabs/home_tab/home_tab.dart';
@@ -8,6 +9,7 @@ import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = 'homeScreen';
@@ -20,7 +22,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
-
   List<Widget> tabs = [
     HomeTab(),
     MapTab(),
@@ -30,6 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var eventListProvider = Provider.of<EventListProvider>(context);
+
     return SafeArea(
       child: Scaffold(
       
@@ -89,6 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.pushNamed(context, AddEventScreen.routeName);
+            eventListProvider.changeSelectedIndex(0);
           },
           child: Icon(
             Icons.add,

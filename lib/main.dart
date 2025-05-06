@@ -38,13 +38,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // var languageProvider = Provider.of<AppLanguageProvider>(context);
+    var languageProvider = Provider.of<AppLanguageProvider>(context);
     var themeProvider = Provider.of<AppThemeProvider>(context);
-    return ChangeNotifierProvider(
-      create: (_) => AppLanguageProvider(),
-      child: Consumer<AppLanguageProvider>(
-        builder: (context, languageProvider, child) {
-          return MaterialApp(
+    return MaterialApp(
             debugShowCheckedModeBanner: false,
             initialRoute: HomeScreen.routeName,
             routes: {
@@ -61,8 +57,6 @@ class MyApp extends StatelessWidget {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
           );
-        },
-      ),
-    );
+
   }
 }

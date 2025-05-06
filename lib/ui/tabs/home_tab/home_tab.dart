@@ -19,9 +19,9 @@ class _HomeTabState extends State<HomeTab> {
   @override
   Widget build(BuildContext context) {
     var eventListProvider = Provider.of<EventListProvider>(context);
-    eventListProvider.getEventsNameList(context);
-
+    // eventListProvider.fullEventsNameList;
     if (eventListProvider.allEventsList.isEmpty) {
+      eventListProvider.getEventsNameList(context);
       eventListProvider.getAllEventsList();
     }
 
@@ -80,7 +80,7 @@ class _HomeTabState extends State<HomeTab> {
                   child: ListView.builder(
                     padding: EdgeInsets.only(bottom: 16),
                     scrollDirection: Axis.horizontal,
-                    itemCount: eventListProvider.fullEventsNameList .length,
+                    itemCount: eventListProvider.fullEventsNameList.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
@@ -110,23 +110,23 @@ class _HomeTabState extends State<HomeTab> {
           Expanded(
             child: eventListProvider.filteredEventsList.isEmpty
                 ? Center(
-                    child: Text(AppLocalizations.of(context)!.noEventAddedYet),
-                  )
+              child: Text(AppLocalizations.of(context)!.noEventAddedYet),
+            )
                 : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) {
-                        return SizedBox(
-                          height: height * 0.02,
-                        );
-                      },
-                      itemCount: eventListProvider.filteredEventsList.length,
-                      itemBuilder: (context, index) {
-                        return EventItemWidget(
-                            event: eventListProvider.filteredEventsList[index]);
-                      },
-                    ),
-                  ),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ListView.separated(
+                separatorBuilder: (context, index) {
+                  return SizedBox(
+                    height: height * 0.02,
+                  );
+                },
+                itemCount: eventListProvider.filteredEventsList.length,
+                itemBuilder: (context, index) {
+                  return EventItemWidget(
+                      event: eventListProvider.filteredEventsList[index]);
+                },
+              ),
+            ),
           ),
           SizedBox(
             height: height * 0.02,
