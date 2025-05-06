@@ -61,14 +61,7 @@ class _ProfileTabState extends State<ProfileTab> {
         ),
       ),
 
-      // PreferredSize(
-      //   preferredSize: Size.fromHeight(height * 0.2),
-      //   child: Container(
-      //     decoration: BoxDecoration(
-      //         color: AppColors.primaryColor,
-      //         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(64))),
-      //   ),
-      // ),
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

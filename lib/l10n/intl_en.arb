@@ -45,5 +45,13 @@
 "chooseTime" : "Choose Time",
 "location" : "Location",
 "chooseEventLocation" : "Choose Event Location",
-"addEvent" : "Add Event"
+"addEvent" : "Add Event",
+"noEventAddedYet" : "No Event Added Yet",
+"noFavEventFound" : "No Favourite Event Found",
+"eventAddedSuccessfully" : "Event Added Successfully",
+"eventUpdatedSuccessfully" : "Event Updated Successfully"
+
+
+
+
 }

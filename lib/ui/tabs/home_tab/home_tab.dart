@@ -1,3 +1,4 @@
+import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/ui/widgets/event_item_widget.dart';
 import 'package:evently_app/ui/widgets/tab_event_item.dart';
 import 'package:evently_app/utils/app_colors.dart';
@@ -5,6 +6,7 @@ import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class HomeTab extends StatefulWidget {
   HomeTab({super.key});
@@ -14,23 +16,18 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-  int selectedIndex = 0;
-
   @override
   Widget build(BuildContext context) {
+    var eventListProvider = Provider.of<EventListProvider>(context);
+    eventListProvider.getEventsNameList(context);
+
+    if (eventListProvider.allEventsList.isEmpty) {
+      eventListProvider.getAllEventsList();
+    }
+
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
-    List<String> eventsNameList = [
-      AppLocalizations.of(context)!.all,
-      AppLocalizations.of(context)!.sport,
-      AppLocalizations.of(context)!.birthday,
-      AppLocalizations.of(context)!.gaming,
-      AppLocalizations.of(context)!.eating,
-      AppLocalizations.of(context)!.holiday,
-      AppLocalizations.of(context)!.bookClub,
-      AppLocalizations.of(context)!.workShop,
-      AppLocalizations.of(context)!.exhibition,
-    ];
+
     List<String> eventIconsList = [
       AppImage.all,
       AppImage.sport,
@@ -83,12 +80,11 @@ class _HomeTabState extends State<HomeTab> {
                   child: ListView.builder(
                     padding: EdgeInsets.only(bottom: 16),
                     scrollDirection: Axis.horizontal,
-                    itemCount: eventsNameList.length,
+                    itemCount: eventListProvider.fullEventsNameList .length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          selectedIndex = index;
-                          setState(() {});
+                          eventListProvider.changeSelectedIndex(index);
                         },
                         child: TabEventItem(
                           backgroundSelectedColor: AppColors.whiteColor,
@@ -97,8 +93,8 @@ class _HomeTabState extends State<HomeTab> {
                           unSelectedIconColor: AppColors.whiteColor,
                           selectedTextStyle: AppStyle.bold14Primary,
                           unSelectedTextStyle: AppStyle.bold14White,
-                          isSelected: selectedIndex == index,
-                          eventName: eventsNameList[index],
+                          isSelected: eventListProvider.selectedIndex == index,
+                          eventName: eventListProvider.fullEventsNameList [index],
                           eventIconPath: eventIconsList[index],
                         ),
                       );
@@ -112,19 +108,28 @@ class _HomeTabState extends State<HomeTab> {
             height: height * 0.02,
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: ListView.separated(
-                  itemCount: 10,
-                  separatorBuilder: (context, index) {
-                    return SizedBox(
-                      height: height * 0.02,
-                    );
-                  },
-                  itemBuilder: (context, index) {
-                    return EventItemWidget();
-                  }),
-            ),
+            child: eventListProvider.filteredEventsList.isEmpty
+                ? Center(
+                    child: Text(AppLocalizations.of(context)!.noEventAddedYet),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) {
+                        return SizedBox(
+                          height: height * 0.02,
+                        );
+                      },
+                      itemCount: eventListProvider.filteredEventsList.length,
+                      itemBuilder: (context, index) {
+                        return EventItemWidget(
+                            event: eventListProvider.filteredEventsList[index]);
+                      },
+                    ),
+                  ),
+          ),
+          SizedBox(
+            height: height * 0.02,
           ),
         ],
       ),
