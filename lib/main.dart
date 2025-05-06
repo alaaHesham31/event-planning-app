@@ -38,24 +38,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var languageProvider = Provider.of<AppLanguageProvider>(context);
+    // var languageProvider = Provider.of<AppLanguageProvider>(context);
     var themeProvider = Provider.of<AppThemeProvider>(context);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: HomeScreen.routeName,
-      routes: {
-        SplashScreen.routeName: (context) => SplashScreen(),
-        LetsGoScreen.routeName: (context) => LetsGoScreen(),
-        OnboardingScreen.routeName: (context) => OnboardingScreen(),
-        LoginScreen.routeName: (context) => LoginScreen(),
-        RegisterScreen.routeName: (context) => RegisterScreen(),
-        HomeScreen.routeName: (context) => HomeScreen(),
-        AddEventScreen.routeName: (context) => AddEventScreen(),
-      },
-      theme: themeProvider.appTheme,
-      locale: Locale(languageProvider.appLanguage),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+    return ChangeNotifierProvider(
+      create: (_) => AppLanguageProvider(),
+      child: Consumer<AppLanguageProvider>(
+        builder: (context, languageProvider, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            initialRoute: HomeScreen.routeName,
+            routes: {
+              SplashScreen.routeName: (context) => SplashScreen(),
+              LetsGoScreen.routeName: (context) => LetsGoScreen(),
+              OnboardingScreen.routeName: (context) => OnboardingScreen(),
+              LoginScreen.routeName: (context) => LoginScreen(),
+              RegisterScreen.routeName: (context) => RegisterScreen(),
+              HomeScreen.routeName: (context) => HomeScreen(),
+              AddEventScreen.routeName: (context) => AddEventScreen(),
+            },
+            theme: themeProvider.appTheme,
+            locale: Locale(languageProvider.appLanguage),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+          );
+        },
+      ),
     );
   }
 }

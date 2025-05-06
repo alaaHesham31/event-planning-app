@@ -7,9 +7,9 @@ import 'package:evently_app/ui/widgets/tab_event_item.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
+import 'package:evently_app/utils/toast_msg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +23,6 @@ class AddEventScreen extends StatefulWidget {
 }
 
 class _AddEventScreenState extends State<AddEventScreen> {
-  int selectedIndex = 0;
   var formKey = GlobalKey<FormState>();
   DateTime? selectedDate;
   String formatedDate = '';
@@ -38,20 +37,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   @override
   Widget build(BuildContext context) {
-     eventListProvider = Provider.of<EventListProvider>(context);
-
+    eventListProvider = Provider.of<EventListProvider>(context);
+   eventListProvider.getEventsNameList(context);
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    List<String> eventsNameList = [
-      AppLocalizations.of(context)!.sport,
-      AppLocalizations.of(context)!.birthday,
-      AppLocalizations.of(context)!.gaming,
-      AppLocalizations.of(context)!.eating,
-      AppLocalizations.of(context)!.holiday,
-      AppLocalizations.of(context)!.bookClub,
-      AppLocalizations.of(context)!.workShop,
-      AppLocalizations.of(context)!.exhibition,
-    ];
+
     List<String> eventIconsList = [
       AppImage.sport,
       AppImage.birthday,
@@ -72,10 +62,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
       AppImage.workshopImage,
       AppImage.exhibitionImage
     ];
-    selectedImage = eventImagesList[selectedIndex];
-    selectedEvent = eventsNameList[selectedIndex];
-    print(selectedEvent);
-    print(selectedImage);
+    selectedImage = eventImagesList[eventListProvider.selectedIndex];
+    selectedEvent = eventListProvider.categoryEventsNameList[eventListProvider.selectedIndex];
+
 
     return SafeArea(
       child: Scaffold(
@@ -114,12 +103,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   child: ListView.builder(
                     padding: EdgeInsets.only(bottom: 16),
                     scrollDirection: Axis.horizontal,
-                    itemCount: eventsNameList.length,
+                    itemCount: eventListProvider.categoryEventsNameList.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          selectedIndex = index;
-                          setState(() {});
+                        eventListProvider.changeSelectedIndex(index);
                         },
                         child: TabEventItem(
                           backgroundSelectedColor: AppColors.primaryColor,
@@ -128,8 +116,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           unSelectedIconColor: AppColors.primaryColor,
                           selectedTextStyle: AppStyle.bold14White,
                           unSelectedTextStyle: AppStyle.bold14Primary,
-                          isSelected: selectedIndex == index,
-                          eventName: eventsNameList[index],
+                          isSelected: eventListProvider.selectedIndex == index,
+                          eventName: eventListProvider.categoryEventsNameList[index],
                           eventIconPath: eventIconsList[index],
                         ),
                       );
@@ -182,7 +170,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         },
                         textStyle: AppStyle.semi16Black,
                         maxLines: 4,
-                        hintText: AppLocalizations.of(context)!.eventDescription,
+                        hintText:
+                            AppLocalizations.of(context)!.eventDescription,
                         hintTextStyle: AppStyle.semi16Grey,
                         borderColor: AppColors.greyColor,
                       ),
@@ -308,8 +297,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
     );
   }
 
-  void addEvent() {
-    if (formKey.currentState?.validate() == true) {}
+  void addEvent() async{
+    if (formKey.currentState!.validate() && selectedDate != null && selectedTime != null) {}
     Event event = Event(
         title: titleController.text,
         description: descriptionController.text,
@@ -317,26 +306,15 @@ class _AddEventScreenState extends State<AddEventScreen> {
         eventName: selectedEvent,
         eventDate: selectedDate!,
         eventTime: formatedTime);
-    FirebaseUtils.addEventToFireStore(event)
+  await  FirebaseUtils.addEventToFireStore(event)
         .timeout(Duration(milliseconds: 500), onTimeout: () {
-          eventListProvider.getAllEvents();
-
-      print('event added successfully');
+    eventListProvider.changeSelectedIndex(0);
+      // eventListProvider.getAllEventsList();
     });
-    // eventListProvider.;
-    Fluttertoast.showToast(
-        msg: "event added successfully",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.SNACKBAR,
-        timeInSecForIosWeb: 1,
-        backgroundColor: AppColors.greyColor,
-        textColor: AppColors.whiteColor,
-        fontSize: 16.0
-    );
+    ToastMessage.toastMsg(AppLocalizations.of(context)!.eventAddedSuccessfully);
 
-    Future.delayed(Duration(milliseconds: 300), () {
+
       Navigator.pop(context);
-    });
 
   }
 

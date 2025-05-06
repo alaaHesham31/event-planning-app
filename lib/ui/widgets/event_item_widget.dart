@@ -1,8 +1,12 @@
 import 'package:evently_app/model/event_model.dart';
+import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_style.dart';
+import 'package:evently_app/utils/toast_msg.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EventItemWidget extends StatelessWidget {
   Event event;
@@ -11,6 +15,7 @@ class EventItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var eventListProvider = Provider.of<EventListProvider>(context);
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return Container(
@@ -42,14 +47,13 @@ class EventItemWidget extends StatelessWidget {
                   '${event.eventDate.day}',
                   style: AppStyle.bold20Primary,
                 ),
-                Text(DateFormat('MMM').format(event.eventDate).toUpperCase(),
+                Text(DateFormat('MMM').format(event.eventDate),
                     style: AppStyle.bold20Primary),
               ],
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(
-                vertical: height * 0.01, horizontal: width * 0.02),
+            padding: EdgeInsets.symmetric(horizontal: width * 0.02),
             margin: EdgeInsets.symmetric(
                 vertical: height * 0.01, horizontal: width * 0.02),
             decoration: BoxDecoration(
@@ -63,10 +67,19 @@ class EventItemWidget extends StatelessWidget {
                   event.title,
                   style: AppStyle.bold16Black,
                 ),
-                Icon(
-                  Icons.favorite_border_rounded,
-                  color: AppColors.primaryColor,
-                )
+                IconButton(
+                  onPressed: () {
+                    // update favourite
+                    eventListProvider.updateIsFavouriteEvent(event);
+                    ToastMessage.toastMsg(AppLocalizations.of(context)!.eventUpdatedSuccessfully);
+                  },
+                  icon: Icon(
+                    event.isFavourite == true
+                        ? Icons.favorite
+                        : Icons.favorite_border_rounded,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
               ],
             ),
           ),

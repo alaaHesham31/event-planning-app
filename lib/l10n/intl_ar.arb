@@ -45,6 +45,10 @@
 "chooseTime": "اختر الوقت",
 "location": "الموقع",
 "chooseEventLocation": "اختر موقع الحدث",
-"addEvent": "إضافة الحدث"
+"addEvent": "إضافة الحدث",
+"noEventAddedYet": "لم يتم إضافة أي حدث بعد",
+"noFavEventFound": "لا يوجد أي حدث مفضل بعد",
+"eventAddedSuccessfully": "تمت إضافة الحدث بنجاح",
+"eventUpdatedSuccessfully": "تم تحديث الحدث بنجاح"
 
 }
