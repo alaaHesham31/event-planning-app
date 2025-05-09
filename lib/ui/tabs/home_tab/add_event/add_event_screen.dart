@@ -43,280 +43,263 @@ class _AddEventScreenState extends State<AddEventScreen> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
-    List<String> eventIconsList = [
-      AppImage.sport,
-      AppImage.birthday,
-      AppImage.gaming,
-      AppImage.eating,
-      AppImage.holiday,
-      AppImage.bookClub,
-      AppImage.workShop,
-      AppImage.exhibition
-    ];
-    List<String> eventImagesList = [
-      AppImage.sportImage,
-      AppImage.birthdayImage,
-      AppImage.gamingImage,
-      AppImage.eatingImage,
-      AppImage.holidayImage,
-      AppImage.bookClubImage,
-      AppImage.workshopImage,
-      AppImage.exhibitionImage
-    ];
-    selectedImage = eventImagesList[eventListProvider.selectedIndex];
-    selectedEvent = eventListProvider.categoryEventsNameList[eventListProvider.selectedIndex];
+
+    selectedImage = eventListProvider.eventImagesList[eventListProvider.selectedIndex];
+    selectedEvent = eventListProvider.categoryEventsIconList[eventListProvider.selectedIndex];
 
 
 
     return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppColors.nodeWhiteColor,
-          centerTitle: true,
-          title: Text(
-            AppLocalizations.of(context)!.createEvent,
-            style: AppStyle.semi20Primary,
+
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: AppColors.nodeWhiteColor,
+            centerTitle: true,
+            title: Text(
+              AppLocalizations.of(context)!.createEvent,
+              style: AppStyle.semi20Primary,
+            ),
+            iconTheme: IconThemeData(color: AppColors.primaryColor),
+
           ),
-          iconTheme: IconThemeData(color: AppColors.primaryColor),
-        ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: height * 0.02, horizontal: width * 0.04),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  height: height * 0.25,
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
+          body: Padding(
+            padding: EdgeInsets.symmetric(
+                vertical: height * 0.02, horizontal: width * 0.04),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    height: height * 0.25,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Image.asset(
+                      selectedImage,
+                      fit: BoxFit.fill,
+                    ),
                   ),
-                  child: Image.asset(
-                    selectedImage,
-                    fit: BoxFit.fill,
+                  SizedBox(
+                    height: height * 0.02,
                   ),
-                ),
-                SizedBox(
-                  height: height * 0.02,
-                ),
-                SizedBox(
-                  height: height * 0.07,
-                  child: ListView.builder(
-                    padding: EdgeInsets.only(bottom: 16),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: eventListProvider.categoryEventsNameList.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          eventListProvider.changeSelectedIndex(index);
-                        },
-                        child: TabEventItem(
-                          backgroundSelectedColor: AppColors.primaryColor,
-                          borderUnSelectedColor: AppColors.primaryColor,
-                          selectedIconColor: AppColors.whiteColor,
-                          unSelectedIconColor: AppColors.primaryColor,
-                          selectedTextStyle: AppStyle.bold14White,
-                          unSelectedTextStyle: AppStyle.bold14Primary,
-                          isSelected: eventListProvider.selectedIndex == index,
-                          eventName: eventListProvider.categoryEventsNameList[index],
-                          eventIconPath: eventIconsList[index],
+                  SizedBox(
+                    height: height * 0.07,
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(bottom: 16),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: eventListProvider.categoryEventsNameList.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            eventListProvider.changeSelectedIndex(index);
+                          },
+                          child: TabEventItem(
+                            backgroundSelectedColor: AppColors.primaryColor,
+                            borderUnSelectedColor: AppColors.primaryColor,
+                            selectedIconColor: AppColors.whiteColor,
+                            unSelectedIconColor: AppColors.primaryColor,
+                            selectedTextStyle: AppStyle.bold14White,
+                            unSelectedTextStyle: AppStyle.bold14Primary,
+                            isSelected: eventListProvider.selectedIndex == index,
+                            eventName: eventListProvider.categoryEventsNameList[index],
+                            eventIconPath: eventListProvider.categoryEventsIconList[index],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Form(
+                    key: formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.title,
+                          style: AppStyle.semi16Black,
                         ),
-                      );
-                    },
-                  ),
-                ),
-                Form(
-                  key: formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.title,
-                        style: AppStyle.semi16Black,
-                      ),
-                      SizedBox(
-                        height: height * 0.01,
-                      ),
-                      CustomTextField(
-                        controller: titleController,
-                        validator: (text) {
-                          if (text == null || text.isEmpty) {
-                            return 'Please Enter Event Title';
-                          }
-                          return null;
-                        },
-                        textStyle: AppStyle.semi16Black,
-                        hintText: AppLocalizations.of(context)!.eventTitle,
-                        hintTextStyle: AppStyle.semi16Grey,
-                        borderColor: AppColors.greyColor,
-                        prefixIcon: Image.asset(AppImage.editIcon),
-                      ),
-                      SizedBox(
-                        height: height * 0.01,
-                      ),
-                      Text(
-                        AppLocalizations.of(context)!.description,
-                        style: AppStyle.semi16Black,
-                      ),
-                      SizedBox(
-                        height: height * 0.01,
-                      ),
-                      CustomTextField(
-                        controller: descriptionController,
-                        validator: (text) {
-                          if (text == null || text.isEmpty) {
-                            return 'Please Enter Event Description';
-                          }
-                          return null;
-                        },
-                        textStyle: AppStyle.semi16Black,
-                        maxLines: 4,
-                        hintText:
-                        AppLocalizations.of(context)!.eventDescription,
-                        hintTextStyle: AppStyle.semi16Grey,
-                        borderColor: AppColors.greyColor,
-                      ),
-                      SizedBox(
-                        height: height * 0.02,
-                      ),
-                      Row(
-                        children: [
-                          Image.asset(AppImage.eventDateIcon),
-                          SizedBox(
-                            width: width * 0.02,
-                          ),
-                          Text(
-                            AppLocalizations.of(context)!.eventDate,
-                            style: AppStyle.semi16Black,
-                          ),
-                          Spacer(),
-                          InkWell(
-                            onTap: chooseDate,
-                            child: Text(
-                              selectedDate == null
-                                  ? AppLocalizations.of(context)!.chooseDate
-                                  : formatedDate,
-                              style: AppStyle.semi16Primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: height * 0.02,
-                      ),
-                      Row(
-                        children: [
-                          Image.asset(AppImage.eventTimeIcon),
-                          SizedBox(
-                            width: width * 0.02,
-                          ),
-                          Text(
-                            AppLocalizations.of(context)!.eventTime,
-                            style: AppStyle.semi16Black,
-                          ),
-                          Spacer(),
-                          InkWell(
-                            onTap: chooseTime,
-                            child: Text(
-                              selectedTime == null
-                                  ? AppLocalizations.of(context)!.chooseTime
-                                  : formatedTime,
-                              style: AppStyle.semi16Primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: height * 0.02,
-                      ),
-                      Text(
-                        AppLocalizations.of(context)!.location,
-                        style: AppStyle.semi16Black,
-                      ),
-                      SizedBox(
-                        height: height * 0.01,
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            vertical: height * 0.01, horizontal: width * 0.015),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: AppColors.primaryColor,
-                          ),
+                        SizedBox(
+                          height: height * 0.01,
                         ),
-                        child: Row(
+                        CustomTextField(
+                          controller: titleController,
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return 'Please Enter Event Title';
+                            }
+                            return null;
+                          },
+                          textStyle: AppStyle.semi16Black,
+                          hintText: AppLocalizations.of(context)!.eventTitle,
+                          hintTextStyle: AppStyle.semi16Grey,
+                          borderColor: AppColors.greyColor,
+                          prefixIcon: Image.asset(AppImage.editIcon),
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Text(
+                          AppLocalizations.of(context)!.description,
+                          style: AppStyle.semi16Black,
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        CustomTextField(
+                          controller: descriptionController,
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return 'Please Enter Event Description';
+                            }
+                            return null;
+                          },
+                          textStyle: AppStyle.semi16Black,
+                          maxLines: 4,
+                          hintText:
+                          AppLocalizations.of(context)!.eventDescription,
+                          hintTextStyle: AppStyle.semi16Grey,
+                          borderColor: AppColors.greyColor,
+                        ),
+                        SizedBox(
+                          height: height * 0.02,
+                        ),
+                        Row(
                           children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: height * 0.012,
-                                  horizontal: width * 0.025),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: AppColors.primaryColor,
-                              ),
-                              child: Icon(
-                                Icons.my_location,
-                                color: AppColors.whiteColor,
-                              ),
-                            ),
+                            Image.asset(AppImage.eventDateIcon),
                             SizedBox(
                               width: width * 0.02,
                             ),
                             Text(
-                              AppLocalizations.of(context)!.chooseEventLocation,
-                              style: AppStyle.semi16Primary,
+                              AppLocalizations.of(context)!.eventDate,
+                              style: AppStyle.semi16Black,
                             ),
                             Spacer(),
-                            Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              color: AppColors.primaryColor,
-                              size: 20,
+                            InkWell(
+                              onTap: chooseDate,
+                              child: Text(
+                                selectedDate == null
+                                    ? AppLocalizations.of(context)!.chooseDate
+                                    : formatedDate,
+                                style: AppStyle.semi16Primary,
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                      SizedBox(
-                        height: height * 0.02,
-                      ),
-                      CustomElevatedButton(
-                        onClick: addEvent,
-                        textStyle: AppStyle.semi20White,
-                        text: AppLocalizations.of(context)!.addEvent,
-                      ),
-                      SizedBox(
-                        height: height * 0.02,
-                      ),
-                    ],
+                        SizedBox(
+                          height: height * 0.02,
+                        ),
+                        Row(
+                          children: [
+                            Image.asset(AppImage.eventTimeIcon),
+                            SizedBox(
+                              width: width * 0.02,
+                            ),
+                            Text(
+                              AppLocalizations.of(context)!.eventTime,
+                              style: AppStyle.semi16Black,
+                            ),
+                            Spacer(),
+                            InkWell(
+                              onTap: chooseTime,
+                              child: Text(
+                                selectedTime == null
+                                    ? AppLocalizations.of(context)!.chooseTime
+                                    : formatedTime,
+                                style: AppStyle.semi16Primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: height * 0.02,
+                        ),
+                        Text(
+                          AppLocalizations.of(context)!.location,
+                          style: AppStyle.semi16Black,
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: height * 0.01, horizontal: width * 0.015),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: height * 0.012,
+                                    horizontal: width * 0.025),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: AppColors.primaryColor,
+                                ),
+                                child: Icon(
+                                  Icons.my_location,
+                                  color: AppColors.whiteColor,
+                                ),
+                              ),
+                              SizedBox(
+                                width: width * 0.02,
+                              ),
+                              Text(
+                                AppLocalizations.of(context)!.chooseEventLocation,
+                                style: AppStyle.semi16Primary,
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: AppColors.primaryColor,
+                                size: 20,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: height * 0.02,
+                        ),
+                        CustomElevatedButton(
+                          onClick: addEvent,
+                          textStyle: AppStyle.semi20White,
+                          text: AppLocalizations.of(context)!.addEvent,
+                        ),
+                        SizedBox(
+                          height: height * 0.02,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
     );
   }
 
   void addEvent() async{
-    if (formKey.currentState!.validate() && selectedDate != null && selectedTime != null) {}
-    Event event = Event(
-        title: titleController.text,
-        description: descriptionController.text,
-        image: selectedImage,
-        eventName: selectedEvent,
-        eventDate: selectedDate!,
-        eventTime: formatedTime);
-    await  FirebaseUtils.addEventToFireStore(event)
-        .timeout(Duration(milliseconds: 500), onTimeout: () {
-      eventListProvider.changeSelectedIndex(0);
-      // eventListProvider.getAllEventsList();
-    });
-    ToastMessage.toastMsg(AppLocalizations.of(context)!.eventAddedSuccessfully);
+    if (formKey.currentState!.validate() && selectedDate != null && selectedTime != null) {
+      Event event = Event(
+          title: titleController.text,
+          description: descriptionController.text,
+          image: selectedImage,
+          eventName: selectedEvent,
+          eventDate: selectedDate!,
+          eventTime: formatedTime);
+      await FirebaseUtils.addEventToFireStore(event)
+          .timeout(Duration(milliseconds: 500), onTimeout: () {
+        eventListProvider.changeSelectedIndex(0);
+      });
+      ToastMessage.toastMsg(
+          AppLocalizations.of(context)!.eventAddedSuccessfully);
 
-    Navigator.pop(context);
-
+      Navigator.pop(context);
+    }
   }
 
   void chooseDate() async {

@@ -19,26 +19,18 @@ class _HomeTabState extends State<HomeTab> {
   @override
   Widget build(BuildContext context) {
     var eventListProvider = Provider.of<EventListProvider>(context);
-    // eventListProvider.fullEventsNameList;
+
     if (eventListProvider.allEventsList.isEmpty) {
       eventListProvider.getEventsNameList(context);
+      eventListProvider.getEventsIconList(context);
+
       eventListProvider.getAllEventsList();
     }
 
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
 
-    List<String> eventIconsList = [
-      AppImage.all,
-      AppImage.sport,
-      AppImage.birthday,
-      AppImage.gaming,
-      AppImage.eating,
-      AppImage.holiday,
-      AppImage.bookClub,
-      AppImage.workShop,
-      AppImage.exhibition
-    ];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
@@ -95,7 +87,7 @@ class _HomeTabState extends State<HomeTab> {
                           unSelectedTextStyle: AppStyle.bold14White,
                           isSelected: eventListProvider.selectedIndex == index,
                           eventName: eventListProvider.fullEventsNameList [index],
-                          eventIconPath: eventIconsList[index],
+                          eventIconPath: eventListProvider.fullEventsIconList[index],
                         ),
                       );
                     },
