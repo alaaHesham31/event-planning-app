@@ -3,7 +3,9 @@ import 'package:evently_app/auth/login/login_screen.dart';
 import 'package:evently_app/auth/regist/register_screen.dart';
 import 'package:evently_app/providers/app_language_provider.dart';
 import 'package:evently_app/providers/app_theme_provider.dart';
+import 'package:evently_app/providers/auth_provider.dart';
 import 'package:evently_app/providers/event_list_providers.dart';
+import 'package:evently_app/providers/login_provider.dart';
 import 'package:evently_app/splash_screen.dart';
 import 'package:evently_app/ui/home_screen.dart';
 import 'package:evently_app/ui/lets_go_screen.dart';
@@ -27,7 +29,10 @@ void main() async {
     providers: [
       ChangeNotifierProvider(create: (context) => AppThemeProvider()),
       ChangeNotifierProvider(create: (context) => AppLanguageProvider()),
-      ChangeNotifierProvider(create: (context) => EventListProvider())
+      ChangeNotifierProvider(create: (context) => EventListProvider()),
+      ChangeNotifierProvider(create: (context) => AuthProvider()),
+
+
     ],
     child: const MyApp(),
   ));
@@ -38,15 +43,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // var languageProvider = Provider.of<AppLanguageProvider>(context);
+    var languageProvider = Provider.of<AppLanguageProvider>(context);
     var themeProvider = Provider.of<AppThemeProvider>(context);
-    return ChangeNotifierProvider(
-      create: (_) => AppLanguageProvider(),
-      child: Consumer<AppLanguageProvider>(
-        builder: (context, languageProvider, child) {
-          return MaterialApp(
+    return MaterialApp(
             debugShowCheckedModeBanner: false,
-            initialRoute: HomeScreen.routeName,
+            initialRoute: LoginScreen.routeName,
             routes: {
               SplashScreen.routeName: (context) => SplashScreen(),
               LetsGoScreen.routeName: (context) => LetsGoScreen(),
@@ -61,8 +62,6 @@ class MyApp extends StatelessWidget {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
           );
-        },
-      ),
-    );
+
   }
 }

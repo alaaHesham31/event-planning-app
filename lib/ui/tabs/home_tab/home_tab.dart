@@ -19,26 +19,18 @@ class _HomeTabState extends State<HomeTab> {
   @override
   Widget build(BuildContext context) {
     var eventListProvider = Provider.of<EventListProvider>(context);
-    eventListProvider.getEventsNameList(context);
 
     if (eventListProvider.allEventsList.isEmpty) {
+      eventListProvider.getEventsNameList(context);
+      eventListProvider.getEventsIconList(context);
+
       eventListProvider.getAllEventsList();
     }
 
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
 
-    List<String> eventIconsList = [
-      AppImage.all,
-      AppImage.sport,
-      AppImage.birthday,
-      AppImage.gaming,
-      AppImage.eating,
-      AppImage.holiday,
-      AppImage.bookClub,
-      AppImage.workShop,
-      AppImage.exhibition
-    ];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
@@ -80,7 +72,7 @@ class _HomeTabState extends State<HomeTab> {
                   child: ListView.builder(
                     padding: EdgeInsets.only(bottom: 16),
                     scrollDirection: Axis.horizontal,
-                    itemCount: eventListProvider.fullEventsNameList .length,
+                    itemCount: eventListProvider.fullEventsNameList.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
@@ -95,7 +87,7 @@ class _HomeTabState extends State<HomeTab> {
                           unSelectedTextStyle: AppStyle.bold14White,
                           isSelected: eventListProvider.selectedIndex == index,
                           eventName: eventListProvider.fullEventsNameList [index],
-                          eventIconPath: eventIconsList[index],
+                          eventIconPath: eventListProvider.fullEventsIconList[index],
                         ),
                       );
                     },
@@ -110,23 +102,23 @@ class _HomeTabState extends State<HomeTab> {
           Expanded(
             child: eventListProvider.filteredEventsList.isEmpty
                 ? Center(
-                    child: Text(AppLocalizations.of(context)!.noEventAddedYet),
-                  )
+              child: Text(AppLocalizations.of(context)!.noEventAddedYet),
+            )
                 : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) {
-                        return SizedBox(
-                          height: height * 0.02,
-                        );
-                      },
-                      itemCount: eventListProvider.filteredEventsList.length,
-                      itemBuilder: (context, index) {
-                        return EventItemWidget(
-                            event: eventListProvider.filteredEventsList[index]);
-                      },
-                    ),
-                  ),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ListView.separated(
+                separatorBuilder: (context, index) {
+                  return SizedBox(
+                    height: height * 0.02,
+                  );
+                },
+                itemCount: eventListProvider.filteredEventsList.length,
+                itemBuilder: (context, index) {
+                  return EventItemWidget(
+                      event: eventListProvider.filteredEventsList[index]);
+                },
+              ),
+            ),
           ),
           SizedBox(
             height: height * 0.02,

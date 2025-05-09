@@ -10,6 +10,7 @@ class CustomElevatedButton extends StatelessWidget {
   String text;
   Widget? icon;
   VoidCallback? onClick;
+  final bool isLoading;
 
   CustomElevatedButton(
       {super.key,
@@ -18,12 +19,14 @@ class CustomElevatedButton extends StatelessWidget {
       required this.text,
         this.borderSide,
         this.onClick,
-      this.icon});
+      this.icon,
+        this.isLoading = false,
+      });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onClick,
+      onPressed: isLoading ? null : onClick,
       style: ElevatedButton.styleFrom(
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -36,7 +39,17 @@ class CustomElevatedButton extends StatelessWidget {
 
         backgroundColor: backgroundColor ?? AppColors.primaryColor,
       ),
-      child: Padding(
+      child:
+      isLoading
+          ? const SizedBox(
+        height: 20,
+        width: 20,
+        child: CircularProgressIndicator(
+          color: Colors.white,
+          strokeWidth: 2,
+        ),
+      )
+          :Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
