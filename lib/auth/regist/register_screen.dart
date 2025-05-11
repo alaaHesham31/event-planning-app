@@ -1,3 +1,5 @@
+import 'package:evently_app/firebase_utils.dart';
+import 'package:evently_app/model/user_model.dart';
 import 'package:evently_app/ui/widgets/custom_elevated_button.dart';
 import 'package:evently_app/ui/widgets/custom_text_field.dart';
 import 'package:evently_app/utils/app_colors.dart';
@@ -88,7 +90,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             return 'Please enter your email';
                           }
                           // Basic email format check
-                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(text)) {
+                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                              .hasMatch(text)) {
                             return 'Enter a valid email';
                           }
                           return null;
@@ -132,7 +135,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         if (text == null || text.isEmpty) {
                           return 'Please Enter Your Password';
                         }
-                        if(passwordController.text != rePasswordController.text){
+                        if (passwordController.text !=
+                            rePasswordController.text) {
                           return 'the two passwords  doesn\'t match';
                         }
                         return null;
@@ -148,15 +152,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       height: height * 0.02,
                     ),
                     CustomElevatedButton(
-                        onClick:  register, // Disable while loading
-                        textStyle: AppStyle.semi20White,
-                        text: AppLocalizations.of(context)!.createAccount,
-                    isLoading: isLoading,),
+                      onClick: register, // Disable while loading
+                      textStyle: AppStyle.semi20White,
+                      text: AppLocalizations.of(context)!.createAccount,
+                      isLoading: isLoading,
+                    ),
                   ],
                 ),
-
               ),
-
               SizedBox(
                 height: height * 0.02,
               ),
@@ -187,23 +190,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   bool isLoading = false;
+
   void register() async {
     if (!formKey.currentState!.validate()) return;
 
     setState(() {
       isLoading = true;
     });
-
     try {
-      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final credential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+      MyUser user = MyUser(
+          id: credential.user?.uid ?? '',
+          name: nameController.text,
+          email: emailController.text);
+
+      await FirebaseUtils.addUserToFireStore(user);
 
       ToastMessage.toastMsg('Account created successfully');
       // Optionally navigate or reset form
       Navigator.pop(context);
-
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         ToastMessage.toastMsg('The password provided is too weak.');
@@ -222,6 +231,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
       });
     }
   }
-
-
 }
