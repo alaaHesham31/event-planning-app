@@ -1,5 +1,9 @@
+
+import 'package:evently_app/auth/login/login_screen.dart';
 import 'package:evently_app/providers/app_language_provider.dart';
 import 'package:evently_app/providers/app_theme_provider.dart';
+import 'package:evently_app/providers/event_list_providers.dart';
+import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/tabs/profile_tab/language_bottom_sheet.dart';
 import 'package:evently_app/ui/tabs/profile_tab/theme_bottom_sheet.dart';
 import 'package:evently_app/utils/app_colors.dart';
@@ -18,8 +22,11 @@ class ProfileTab extends StatefulWidget {
 }
 
 class _ProfileTabState extends State<ProfileTab> {
+
   @override
   Widget build(BuildContext context) {
+    var userProvider = Provider.of<UserProvider>(context);
+ var eventListProvider = Provider.of<EventListProvider>(context);
     var height = MediaQuery.of(context).size.height;
     var languageProvider = Provider.of<AppLanguageProvider>(context);
     var themeProvider = Provider.of<AppThemeProvider>(context);
@@ -43,11 +50,11 @@ class _ProfileTabState extends State<ProfileTab> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Alaa Hesham',
+                      userProvider.currentUser!.name,
                       style: AppStyle.bold24White,
                     ),
                     Text(
-                      'alaa.hesham@gmai.com',
+                      userProvider.currentUser!.email,
                       style: AppStyle.semi16White,
                       overflow: TextOverflow.visible,
                       softWrap: true,
@@ -148,7 +155,15 @@ class _ProfileTabState extends State<ProfileTab> {
             Padding(
               padding: const EdgeInsets.only(bottom: 12.0),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  // Clear all event-related data first
+                  eventListProvider.clearAllEventLists();
+
+
+
+                  Navigator.pushReplacementNamed( context, LoginScreen.routeName);
+
+                },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),

@@ -1,4 +1,5 @@
 import 'package:evently_app/providers/event_list_providers.dart';
+import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/tabs/favorite_tab/favorite_tab.dart';
 import 'package:evently_app/ui/tabs/home_tab/add_event/add_event_screen.dart';
 import 'package:evently_app/ui/tabs/home_tab/home_tab.dart';
@@ -92,7 +93,9 @@ class _HomeScreenState extends State<HomeScreen> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.pushNamed(context, AddEventScreen.routeName);
-            eventListProvider.changeSelectedIndex(0);
+            var userProvider = Provider.of<UserProvider>(context, listen: false);
+
+            eventListProvider.changeSelectedIndex(0, userProvider.currentUser!.id);
           },
           child: Icon(
             Icons.add,

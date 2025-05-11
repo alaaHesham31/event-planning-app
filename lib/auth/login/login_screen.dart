@@ -1,6 +1,8 @@
 
 import 'package:evently_app/auth/regist/register_screen.dart';
-import 'package:evently_app/providers/auth_provider.dart';
+import 'package:evently_app/firebase_utils.dart';
+import 'package:evently_app/providers/event_list_providers.dart';
+import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/home_screen.dart';
 import 'package:evently_app/ui/widgets/custom_elevated_button.dart';
 import 'package:evently_app/ui/widgets/custom_text_field.dart';
@@ -27,6 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  late UserProvider userProvider;
+  late EventListProvider eventListProvider;
 
   @override
   void dispose() {
@@ -196,7 +200,12 @@ class _LoginScreenState extends State<LoginScreen> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-
+     var user = await FirebaseUtils.readUserFromFireStore(credential.user?.uid ?? '');
+     if(user == null){
+       return ;
+     }
+      userProvider = Provider.of<UserProvider>(context, listen: false);
+     userProvider.updateUser(user);
       ToastMessage.toastMsg('Login successful');
       Navigator.pushReplacementNamed(context, HomeScreen.routeName);
 
@@ -213,6 +222,11 @@ class _LoginScreenState extends State<LoginScreen> {
     } finally {
       authProvider.setLoading(false);
     }
+    // Update selected index after success
+    eventListProvider.changeSelectedIndex(
+      0,
+      userProvider.currentUser!.id,
+    );
   }
 
 

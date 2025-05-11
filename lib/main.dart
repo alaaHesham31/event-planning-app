@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:evently_app/auth/login/login_screen.dart';
 import 'package:evently_app/auth/regist/register_screen.dart';
 import 'package:evently_app/providers/app_language_provider.dart';
 import 'package:evently_app/providers/app_theme_provider.dart';
 import 'package:evently_app/providers/auth_provider.dart';
 import 'package:evently_app/providers/event_list_providers.dart';
-import 'package:evently_app/providers/login_provider.dart';
+import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/splash_screen.dart';
 import 'package:evently_app/ui/home_screen.dart';
 import 'package:evently_app/ui/lets_go_screen.dart';
@@ -23,7 +22,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseFirestore.instance.disableNetwork();
+  // await FirebaseFirestore.instance.disableNetwork();
 
   runApp(MultiProvider(
     providers: [
@@ -31,6 +30,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => AppLanguageProvider()),
       ChangeNotifierProvider(create: (context) => EventListProvider()),
       ChangeNotifierProvider(create: (context) => AuthProvider()),
+      ChangeNotifierProvider(create: (context) => UserProvider()),
 
 
     ],

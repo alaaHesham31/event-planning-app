@@ -1,4 +1,5 @@
 import 'package:evently_app/providers/event_list_providers.dart';
+import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/widgets/event_item_widget.dart';
 import 'package:evently_app/ui/widgets/tab_event_item.dart';
 import 'package:evently_app/utils/app_colors.dart';
@@ -16,15 +17,17 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
+  late UserProvider userProvider;
   @override
   Widget build(BuildContext context) {
     var eventListProvider = Provider.of<EventListProvider>(context);
-
+     userProvider = Provider.of<UserProvider>(context);
+    // Reset or clear old events if needed
+    // eventListProvider.clearAllEventLists();
     if (eventListProvider.allEventsList.isEmpty) {
       eventListProvider.getEventsNameList(context);
       eventListProvider.getEventsIconList(context);
-
-      eventListProvider.getAllEventsList();
+      eventListProvider.getAllEventsList(userProvider.currentUser!.id);
     }
 
     var width = MediaQuery.of(context).size.width;
@@ -76,7 +79,7 @@ class _HomeTabState extends State<HomeTab> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          eventListProvider.changeSelectedIndex(index);
+                          eventListProvider.changeSelectedIndex(index, userProvider.currentUser!.id);
                         },
                         child: TabEventItem(
                           backgroundSelectedColor: AppColors.whiteColor,
@@ -140,7 +143,7 @@ class _HomeTabState extends State<HomeTab> {
               style: AppStyle.regular16White,
             ),
             Text(
-              'Alaa',
+              userProvider.currentUser!.name,
               style: AppStyle.bold24White,
             ),
           ],

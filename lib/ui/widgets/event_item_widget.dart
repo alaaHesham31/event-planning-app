@@ -1,5 +1,6 @@
 import 'package:evently_app/model/event_model.dart';
 import 'package:evently_app/providers/event_list_providers.dart';
+import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_style.dart';
 import 'package:evently_app/utils/toast_msg.dart';
@@ -70,7 +71,9 @@ class EventItemWidget extends StatelessWidget {
                 IconButton(
                   onPressed: () {
                     // update favourite
-                    eventListProvider.updateIsFavouriteEvent(event);
+                    var userProvider = Provider.of<UserProvider>(context, listen: false);
+
+                    eventListProvider.updateIsFavouriteEvent(event, userProvider.currentUser!.id);
                     ToastMessage.toastMsg(AppLocalizations.of(context)!.eventUpdatedSuccessfully);
                   },
                   icon: Icon(

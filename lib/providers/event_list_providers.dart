@@ -26,6 +26,7 @@ class EventListProvider extends ChangeNotifier {
     AppImage.workshopImage,
     AppImage.exhibitionImage
   ];
+
   void getEventsNameList(context) {
     fullEventsNameList = [
       AppLocalizations.of(context)!.all,
@@ -61,9 +62,9 @@ class EventListProvider extends ChangeNotifier {
 
   // action
   //get the all events -- all tab
-  Future<void> getAllEventsList() async {
+  Future<void> getAllEventsList(String uId) async {
     QuerySnapshot<Event> querySnapshot =
-    await FirebaseUtils.getEventCollection().orderBy('eventDate').get();
+    await FirebaseUtils.getEventCollection(uId).orderBy('eventDate').get();
     allEventsList = querySnapshot.docs.map((doc) {
       return doc.data();
     }).toList();
@@ -72,28 +73,32 @@ class EventListProvider extends ChangeNotifier {
   }
 
   // get filtered events -- each for event name (category)
-  Future<void> filterEventsByCategory() async {
-    await getAllEventsList();
+  Future<void> filterEventsByCategory(String uId) async {
+    await getAllEventsList(uId);
     filteredEventsList = allEventsList.where((event) {
-      return event.eventName == fullEventsNameList[selectedIndex];
+      return event.eventName == categoryEventsNameList[selectedIndex - 1];
     }).toList();
     notifyListeners();
   }
 
   // update isFavourite event
-  void updateIsFavouriteEvent(event) {
-    FirebaseUtils.getEventCollection()
+  void updateIsFavouriteEvent(event, String uId) {
+    FirebaseUtils.getEventCollection(uId)
         .doc(event.id)
-        .update({'isFavourite': !event.isFavourite}).timeout(
+        .update({'isFavourite': !event.isFavourite}).
+    then((onValue){
+      print('event updated successfuly');
+    })
+    .timeout(
         Duration(milliseconds: 500), onTimeout: () {
       print('event updated successfuly');
     });
-    selectedIndex == 0 ? getAllEventsList() : filterEventsByCategory();
-    getFavouriteEvent();
+    selectedIndex == 0 ? getAllEventsList(uId) : filterEventsByCategory(uId);
+    getFavouriteEvent(uId);
   }
 
-  void getFavouriteEvent() async {
-    var querySnapshot = await FirebaseUtils.getEventCollection()
+  void getFavouriteEvent(String uId) async {
+    var querySnapshot = await FirebaseUtils.getEventCollection(uId)
         .orderBy('eventDate')
         .where('isFavourite', isEqualTo: true).get();
 
@@ -104,13 +109,22 @@ class EventListProvider extends ChangeNotifier {
   }
 
   // change the index of event tab and show eventsList based on the category
-  void changeSelectedIndex(int newSelectedIndex) {
+  void changeSelectedIndex(int newSelectedIndex, String uId) {
     selectedIndex = newSelectedIndex;
     if (selectedIndex == 0) {
-      getAllEventsList();
+      getAllEventsList(uId);
     } else {
-      filterEventsByCategory();
+      filterEventsByCategory(uId);
     }
     notifyListeners();
   }
+  void clearAllEventLists() {
+    allEventsList.clear();
+    filteredEventsList.clear();
+    fullEventsNameList.clear();
+    fullEventsIconList.clear();
+    selectedIndex = 0;
+    notifyListeners();
+  }
+
 }
