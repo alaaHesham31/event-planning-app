@@ -1,17 +1,33 @@
-# evently app
+# 🎉 Evently App – Event Planning Made Easy
 
-A new Flutter project.
+Evently is a Flutter-based mobile app that helps users **create, customize, and manage their events** efficiently. Whether it's a meeting, a party, or a personal reminder, Evently lets you organize it under categories, set a location, and get notified before it starts.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 📱 Features
 
-A few resources to get you started if this is your first Flutter project:
+- 📌 Create and customize events with category filtering
+- 📍 Attach event locations using Google Maps
+- ⏰ Countdown and push notifications for upcoming events
+- ❤️ Add events to favorites
+- 🔍 Search for events by name or category
+- 🌐 Localize the map and set your preferred view
+- 🎨 Theming support (light/dark)
+- 🔐 Firebase Authentication (signup, login)
+- ☁️ Firebase Firestore for event storage
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-"# event-planning-app" 
+## 🛠️ Tech Stack
+
+- **Flutter** with Provider for state management
+- **Firebase** (Auth, Firestore, Core)
+- **Google Maps API**
+- **Push Notifications**
+- **Additional Packages**:
+  - `google_fonts`
+  - `introduction_screen`
+  - `fluttertoast`
+
+---
+
