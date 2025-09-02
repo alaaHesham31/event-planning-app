@@ -1,21 +1,21 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:evently_app/firebase_utils.dart';
 import 'package:evently_app/model/event_model.dart';
 import 'package:evently_app/utils/app_image.dart';
+import 'package:evently_app/utils/firebase_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EventListProvider extends ChangeNotifier {
   int selectedIndex = 0;
 
+  List<EventModel> allEventsList = [];
+  List<EventModel> filteredEventsList = [];
+  List<EventModel> favouriteEventsList = [];
 
-  List<Event> allEventsList = []; // eventsList
-  List<Event> filteredEventsList = [];
-  List<String> fullEventsNameList = []; // Includes "All"
-  List<String> categoryEventsNameList = []; // Excludes "All"
-  List<String> fullEventsIconList = []; // Includes "All"
-  List<String> categoryEventsIconList = []; // Excludes "All"
-  List<Event> favouriteEventsList = [];
+  List<String> fullEventsNameList = [];
+  List<String> categoryEventsNameList = [];
+  List<String> fullEventsIconList = [];
+  List<String> categoryEventsIconList = [];
+
   List<String> eventImagesList = [
     AppImage.sportImage,
     AppImage.birthdayImage,
@@ -24,10 +24,11 @@ class EventListProvider extends ChangeNotifier {
     AppImage.holidayImage,
     AppImage.bookClubImage,
     AppImage.workshopImage,
-    AppImage.exhibitionImage
+    AppImage.exhibitionImage,
   ];
 
-  void getEventsNameList(context) {
+  // --- Setup ---
+  void loadEventCategories(BuildContext context) {
     fullEventsNameList = [
       AppLocalizations.of(context)!.all,
       AppLocalizations.of(context)!.sport,
@@ -39,11 +40,8 @@ class EventListProvider extends ChangeNotifier {
       AppLocalizations.of(context)!.workShop,
       AppLocalizations.of(context)!.exhibition,
     ];
+    categoryEventsNameList = fullEventsNameList.sublist(1);
 
-    categoryEventsNameList = List.from(fullEventsNameList)..removeAt(0);
-
-  }
-  void getEventsIconList(context) {
     fullEventsIconList = [
       AppImage.all,
       AppImage.sport,
@@ -53,78 +51,69 @@ class EventListProvider extends ChangeNotifier {
       AppImage.holiday,
       AppImage.bookClub,
       AppImage.workShop,
-      AppImage.exhibition
+      AppImage.exhibition,
     ];
-
-    categoryEventsIconList = List.from(fullEventsIconList)..removeAt(0);
-
+    categoryEventsIconList = fullEventsIconList.sublist(1);
   }
 
-  // action
-  //get the all events -- all tab
-  Future<void> getAllEventsList(String uId) async {
-    QuerySnapshot<Event> querySnapshot =
-    await FirebaseUtils.getEventCollection(uId).orderBy('eventDate').get();
-    allEventsList = querySnapshot.docs.map((doc) {
-      return doc.data();
-    }).toList();
+  // --- Load Events ---
+  Future<void> loadAllEvents(String uId) async {
+    allEventsList = await FirebaseUtils.getAllEvents(uId);
     filteredEventsList = allEventsList;
     notifyListeners();
   }
 
-  // get filtered events -- each for event name (category)
   Future<void> filterEventsByCategory(String uId) async {
-    await getAllEventsList(uId);
+    await loadAllEvents(uId);
     filteredEventsList = allEventsList.where((event) {
       return event.eventName == categoryEventsNameList[selectedIndex - 1];
     }).toList();
     notifyListeners();
   }
 
-  // update isFavourite event
-  void updateIsFavouriteEvent(event, String uId) {
-    FirebaseUtils.getEventCollection(uId)
-        .doc(event.id)
-        .update({'isFavourite': !event.isFavourite}).
-    then((onValue){
-      print('event updated successfuly');
-    })
-    .timeout(
-        Duration(milliseconds: 500), onTimeout: () {
-      print('event updated successfuly');
-    });
-    selectedIndex == 0 ? getAllEventsList(uId) : filterEventsByCategory(uId);
-    getFavouriteEvent(uId);
-  }
-
-  void getFavouriteEvent(String uId) async {
-    var querySnapshot = await FirebaseUtils.getEventCollection(uId)
-        .orderBy('eventDate')
-        .where('isFavourite', isEqualTo: true).get();
-
-    favouriteEventsList = querySnapshot.docs.map((doc) {
-      return doc.data();
-    }).toList();
+  Future<void> loadFavourites(String uId) async {
+    favouriteEventsList = await FirebaseUtils.getFavouriteEvents(uId);
     notifyListeners();
   }
 
-  // change the index of event tab and show eventsList based on the category
-  void changeSelectedIndex(int newSelectedIndex, String uId) {
-    selectedIndex = newSelectedIndex;
-    if (selectedIndex == 0) {
-      getAllEventsList(uId);
+  // --- Event Actions ---
+  Future<void> toggleFavourite(EventModel event, String uId) async {
+    await FirebaseUtils.updateEvent(
+        uId, event.copyWith(isFavourite: !event.isFavourite));
+    selectedIndex == 0 ? await loadAllEvents(uId) : await filterEventsByCategory(uId);
+    await loadFavourites(uId);
+  }
+
+  Future<void> deleteEvent(String eventId, String uId) async {
+    await FirebaseUtils.deleteEvent(uId, eventId);
+    selectedIndex == 0 ? await loadAllEvents(uId) : await filterEventsByCategory(uId);
+    notifyListeners();
+  }
+
+  void changeSelectedIndex(int index, String uId) {
+    selectedIndex = index;
+    if (index == 0) {
+      loadAllEvents(uId);
     } else {
       filterEventsByCategory(uId);
     }
-    notifyListeners();
   }
-  void clearAllEventLists() {
+
+  EventModel? getEventById(String eventId) {
+    try {
+      return allEventsList.firstWhere((event) => event.id == eventId);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  void clearCache() {
     allEventsList.clear();
     filteredEventsList.clear();
+    favouriteEventsList.clear();
     fullEventsNameList.clear();
     fullEventsIconList.clear();
     selectedIndex = 0;
     notifyListeners();
   }
-
 }

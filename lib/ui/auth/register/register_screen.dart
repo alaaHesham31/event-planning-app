@@ -90,12 +90,12 @@ class _RegisterScreenState extends State<RegisterScreen>
                           controller: viewModel.emailController,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
-                              return 'Please enter your email';
+                              return AppLocalizations.of(context)!.pleaseEnterEmail;
                             }
                             // Basic email format check
                             if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
                                 .hasMatch(text)) {
-                              return 'Enter a valid email';
+                              return AppLocalizations.of(context)!.invalidEmail;
                             }
                             return null;
                           },
@@ -112,10 +112,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                         obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
+                            return AppLocalizations.of(context)!.pleaseEnterPassword;
                           }
                           if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
+                            return AppLocalizations.of(context)!.passwordTooShort;
                           }
                           return null;
                         },
@@ -136,11 +136,11 @@ class _RegisterScreenState extends State<RegisterScreen>
                         obscureText: true,
                         validator: (text) {
                           if (text == null || text.isEmpty) {
-                            return 'Please Enter Your Password';
+                            return AppLocalizations.of(context)!.pleaseEnterPassword;
                           }
                           if (viewModel.passwordController.text !=
                               viewModel.rePasswordController.text) {
-                            return 'the two passwords  doesn\'t match';
+                            return AppLocalizations.of(context)!.passwordsDoNotMatch;
                           }
                           return null;
                         },

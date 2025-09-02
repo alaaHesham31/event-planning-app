@@ -36,11 +36,13 @@ class LoginScreenViewModel extends ChangeNotifier {
       final uid = credential.user?.uid;
 
       if (uid == null || uid.isEmpty) {
-        navigator.showMsg('Login failed: Invalid user ID.', AppColors.redColor);
+        navigator.showMsg(
+            'Login failed: Invalid user ID.',
+            AppColors.redColor);
         return;
       }
 
-      final user = await FirebaseUtils.readUserFromFireStore(uid);
+      final user = await FirebaseUtils.getUserById(uid);
 
       if (user == null) {
         navigator.showMsg(
@@ -113,7 +115,7 @@ class LoginScreenViewModel extends ChangeNotifier {
       }
 
       //  Check if user exists in Firestore
-      final existingUser = await FirebaseUtils.readUserFromFireStore(user.uid);
+      final existingUser = await FirebaseUtils.getUserById(user.uid);
 
       if (existingUser == null) {
         // Create new Firestore user
@@ -123,12 +125,12 @@ class LoginScreenViewModel extends ChangeNotifier {
           email: user.email ?? "",
         );
 
-        await FirebaseUtils.addUserToFireStore(myUser);
+        await FirebaseUtils.addUser(myUser);
       }
 
       // 👤 Update provider (if you’re using it)
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      final myUserFromDb = await FirebaseUtils.readUserFromFireStore(user.uid);
+      final myUserFromDb = await FirebaseUtils.getUserById(user.uid);
       if (myUserFromDb != null) {
         userProvider.updateUser(myUserFromDb);
       }

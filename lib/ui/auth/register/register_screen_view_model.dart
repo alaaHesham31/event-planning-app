@@ -33,7 +33,7 @@ class RegisterScreenViewModel extends ChangeNotifier {
           name: nameController.text,
           email: emailController.text);
 
-      await FirebaseUtils.addUserToFireStore(user);
+      await FirebaseUtils.addUser(user);
       navigator.showMsg('Account created successfully',  AppColors.greenColor);
       // Optionally navigate or reset form
       navigator.navigateToHome();

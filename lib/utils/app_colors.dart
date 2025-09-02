@@ -11,6 +11,8 @@ class AppColors{
   static const Color nodeWhiteColor = Color(0xFFF2FEFF);
   static const Color navyColor = Color(0xFF101127); // primary color in the dark mode
   static const Color transparentColor = Colors.transparent;
+  static const Color greenColor = Color(0xFF008000);
+
 
 
 }

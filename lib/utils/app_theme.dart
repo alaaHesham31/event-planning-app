@@ -7,12 +7,11 @@ class AppTheme {
     primaryColor: AppColors.primaryColor,
     scaffoldBackgroundColor: AppColors.nodeWhiteColor,
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: AppColors.primaryColor,
       showUnselectedLabels: true,
       selectedLabelStyle: AppStyle.bold14White,
-
       type: BottomNavigationBarType.fixed,
       elevation: 0,
-
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: AppColors.primaryColor,
@@ -21,10 +20,13 @@ class AppTheme {
       ),
     ),
   );
+
+
   static final ThemeData darkTheme = ThemeData(
     primaryColor: AppColors.navyColor,
     scaffoldBackgroundColor: AppColors.navyColor,
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: AppColors.navyColor,
       showUnselectedLabels: true,
       selectedLabelStyle: AppStyle.bold14White,
       type: BottomNavigationBarType.fixed,

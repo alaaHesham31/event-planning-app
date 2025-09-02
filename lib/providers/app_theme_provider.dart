@@ -11,4 +11,8 @@ class AppThemeProvider extends ChangeNotifier{
     appTheme = newTheme;
     notifyListeners();
   }
+
+  bool isLightTheme(ThemeData newTheme){
+    return appTheme == AppTheme.lightTheme ;
+  }
 }

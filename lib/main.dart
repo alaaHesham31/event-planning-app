@@ -1,15 +1,18 @@
-import 'package:evently_app/auth/login/login_screen.dart';
-import 'package:evently_app/auth/regist/register_screen.dart';
 import 'package:evently_app/providers/app_language_provider.dart';
 import 'package:evently_app/providers/app_theme_provider.dart';
 import 'package:evently_app/providers/auth_provider.dart';
 import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/providers/user_provider.dart';
-import 'package:evently_app/splash_screen.dart';
+import 'package:evently_app/ui/auth/register/register_screen.dart';
+import 'package:evently_app/ui/splash_screen.dart';
+import 'package:evently_app/ui/auth/login/login_screen.dart';
 import 'package:evently_app/ui/home_screen.dart';
 import 'package:evently_app/ui/lets_go_screen.dart';
 import 'package:evently_app/ui/onboarding_screen.dart';
 import 'package:evently_app/ui/tabs/home_tab/add_event/add_event_screen.dart';
+import 'package:evently_app/ui/tabs/home_tab/edit_event_screen.dart';
+import 'package:evently_app/ui/tabs/home_tab/event_details_screen.dart';
+import 'package:evently_app/ui/tabs/home_tab/add_event/location_picker_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -31,8 +34,6 @@ void main() async {
       ChangeNotifierProvider(create: (context) => EventListProvider()),
       ChangeNotifierProvider(create: (context) => AuthProvider()),
       ChangeNotifierProvider(create: (context) => UserProvider()),
-
-
     ],
     child: const MyApp(),
   ));
@@ -46,22 +47,24 @@ class MyApp extends StatelessWidget {
     var languageProvider = Provider.of<AppLanguageProvider>(context);
     var themeProvider = Provider.of<AppThemeProvider>(context);
     return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            initialRoute: LoginScreen.routeName,
-            routes: {
-              SplashScreen.routeName: (context) => SplashScreen(),
-              LetsGoScreen.routeName: (context) => LetsGoScreen(),
-              OnboardingScreen.routeName: (context) => OnboardingScreen(),
-              LoginScreen.routeName: (context) => LoginScreen(),
-              RegisterScreen.routeName: (context) => RegisterScreen(),
-              HomeScreen.routeName: (context) => HomeScreen(),
-              AddEventScreen.routeName: (context) => AddEventScreen(),
-            },
-            theme: themeProvider.appTheme,
-            locale: Locale(languageProvider.appLanguage),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-          );
-
+      debugShowCheckedModeBanner: false,
+      initialRoute: LoginScreen.routeName,
+      routes: {
+        SplashScreen.routeName: (context) => SplashScreen(),
+        LetsGoScreen.routeName: (context) => LetsGoScreen(),
+        OnboardingScreen.routeName: (context) => OnboardingScreen(),
+        LoginScreen.routeName: (context) => LoginScreen(),
+        RegisterScreen.routeName: (context) => RegisterScreen(),
+        HomeScreen.routeName: (context) => HomeScreen(),
+        AddEventScreen.routeName: (context) => AddEventScreen(),
+        LocationPickerScreen.routeName: (context) => LocationPickerScreen(),
+        EventDetailsScreen.routeName: (context) => EventDetailsScreen(),
+        EditEventScreen.routeName: (context) => EditEventScreen(),
+      },
+      theme: themeProvider.appTheme,
+      locale: Locale(languageProvider.appLanguage),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+    );
   }
 }

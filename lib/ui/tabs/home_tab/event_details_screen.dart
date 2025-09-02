@@ -1,4 +1,6 @@
 import 'package:evently_app/model/event_model.dart';
+import 'package:evently_app/providers/event_list_providers.dart';
+import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/tabs/home_tab/edit_event_screen.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_image.dart';
@@ -7,18 +9,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class EventDetailsScreen extends StatelessWidget {
+class EventDetailsScreen extends StatefulWidget {
   static const String routeName = 'event-details-screen';
 
   EventDetailsScreen({super.key});
 
+  @override
+  State<EventDetailsScreen> createState() => _EventDetailsScreenState();
+}
+
+class _EventDetailsScreenState extends State<EventDetailsScreen> {
   GoogleMapController? mapController;
 
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as EventModel;
+    final userProvider = Provider.of<UserProvider>(context);
+    final event = Provider.of<EventListProvider>(context)
+        .getEventById(args.id);
+
+    if (event == null) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -39,7 +56,31 @@ class EventDetailsScreen extends StatelessWidget {
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              final confirm = await showDialog<bool>(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: Text("Delete Event"),
+                  content: Text("Are you sure you want to delete this event?"),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: Text("Cancel")),
+                    TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: Text("Delete")),
+                  ],
+                ),
+              );
+
+              if (confirm == true) {
+                await Provider.of<EventListProvider>(context, listen: false)
+                    .deleteEvent(event.id, userProvider.currentUser!.id);
+
+                Navigator.pop(context); // Go back after deletion
+              }
+
+            },
             icon: Image(
               image: AssetImage(AppImage.deleteIcon),
             ),
@@ -58,7 +99,7 @@ class EventDetailsScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Image.asset(
-                  args.image,
+                  event.image,
                   fit: BoxFit.fill,
                 ),
               ),
@@ -66,7 +107,7 @@ class EventDetailsScreen extends StatelessWidget {
                 height: 24,
               ),
               Text(
-                args.title,
+                event.title,
                 style: AppStyle.semi24Primary,
               ),
               SizedBox(
@@ -100,11 +141,11 @@ class EventDetailsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          DateFormat('dd-MM-yyyy').format(args.eventDate),
+                          DateFormat('dd-MM-yyyy').format(event.eventDate),
                           style: AppStyle.semi16Primary,
                         ),
                         Text(
-                          args.eventTime,
+                          event.eventTime,
                           style: AppStyle.semi16Black,
                         ),
                       ],
@@ -140,7 +181,7 @@ class EventDetailsScreen extends StatelessWidget {
                       width: 16,
                     ),
                     Text(
-                      '${args.city} , ${args.country}',
+                      '${event.city} , ${event.country}',
                       style: AppStyle.semi16Primary,
                     ),
                     Spacer(),
@@ -158,7 +199,7 @@ class EventDetailsScreen extends StatelessWidget {
               GestureDetector(
                 onTap: () async {
                   final url =
-                      "https://www.google.com/maps/search/?api=1&query=${args.location.latitude},${args.location.longitude}";
+                      "https://www.google.com/maps/search/?api=1&query=${event.location.latitude},${event.location.longitude}";
                   if (await canLaunchUrl(Uri.parse(url))) {
                     await launchUrl(Uri.parse(url));
                   }
@@ -174,20 +215,24 @@ class EventDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   // clipBehavior: Clip.antiAlias,
-                  child: GoogleMap(
-                    initialCameraPosition:
-                        CameraPosition(target: args.location, zoom: 10),
-                    onMapCreated: (controller) => mapController = controller,
-                    markers: {
-                      Marker(
-                        markerId: MarkerId('displayed'),
-                        position: args.location,
-                        // Blue pin
-                      ),
-                    },
-                    zoomControlsEnabled: false,
-                    myLocationEnabled: false,
-                    scrollGesturesEnabled: false,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: GoogleMap(
+                      initialCameraPosition:
+                          CameraPosition(target: event.location, zoom: 10),
+                      onMapCreated: (controller) => mapController = controller,
+                      markers: {
+                        Marker(
+                          markerId: MarkerId('displayed'),
+                          position: event.location,
+                          icon: BitmapDescriptor.defaultMarkerWithHue(
+                              BitmapDescriptor.hueRed),
+                        ),
+                      },
+                      zoomControlsEnabled: false,
+                      myLocationEnabled: false,
+                      scrollGesturesEnabled: false,
+                    ),
                   ),
                 ),
               ),
@@ -202,7 +247,7 @@ class EventDetailsScreen extends StatelessWidget {
                 height: 12,
               ),
               Text(
-                args.description,
+                event.description,
                 style: AppStyle.semi16Black,
               ),
             ],

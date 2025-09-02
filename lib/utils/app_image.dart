@@ -44,6 +44,11 @@ class AppImage{
   static const String editIcon = "assets/images/edit_icon.png";
   static const String eventDateIcon = "assets/images/event_date_icon.png";
   static const String eventTimeIcon = "assets/images/event_time_icon.png";
+  static const String deleteIcon = "assets/images/delete_icon.png";
+  static const String updateIcon = "assets/images/update_icon.png";
+  static const String markerIcon = "assets/images/marker.png";
+
+
 
 
 
