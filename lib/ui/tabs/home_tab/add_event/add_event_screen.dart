@@ -1,4 +1,5 @@
-import 'package:evently_app/firebase_utils.dart';
+import 'package:evently_app/ui/tabs/home_tab/add_event/location_picker_screen.dart';
+import 'package:evently_app/utils/firebase_utils.dart';
 import 'package:evently_app/model/event_model.dart';
 import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/providers/user_provider.dart';
@@ -11,6 +12,8 @@ import 'package:evently_app/utils/app_style.dart';
 import 'package:evently_app/utils/toast_msg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -35,6 +38,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
   late UserProvider userProvider;
   String selectedImage = '';
   String selectedEvent = '';
+  String? selectedCountry;
+  String? selectedCity;
+  String? selectedLocation;
+  LatLng? pickedLocation;
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +135,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         controller: titleController,
                         validator: (text) {
                           if (text == null || text.isEmpty) {
-                            return 'Please Enter Event Title';
+                            return AppLocalizations.of(context)!
+                                .pleaseEnterEventTitle;
                           }
                           return null;
                         },
@@ -152,7 +160,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         controller: descriptionController,
                         validator: (text) {
                           if (text == null || text.isEmpty) {
-                            return 'Please Enter Event Description';
+                            return AppLocalizations.of(context)!
+                                .pleaseEnterEventDescription;
                           }
                           return null;
                         },
@@ -223,44 +232,77 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       SizedBox(
                         height: height * 0.01,
                       ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            vertical: height * 0.01, horizontal: width * 0.015),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: height * 0.012,
-                                  horizontal: width * 0.025),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: AppColors.primaryColor,
-                              ),
-                              child: Icon(
-                                Icons.my_location,
-                                color: AppColors.whiteColor,
-                              ),
+                      InkWell(
+                        onTap: () async {
+                          pickedLocation =
+                              await Navigator.of(context).push<LatLng>(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const LocationPickerScreen(),
                             ),
-                            SizedBox(
-                              width: width * 0.02,
-                            ),
-                            Text(
-                              AppLocalizations.of(context)!.chooseEventLocation,
-                              style: AppStyle.semi16Primary,
-                            ),
-                            Spacer(),
-                            Icon(
-                              Icons.arrow_forward_ios_rounded,
+                          );
+
+                          if (pickedLocation != null) {
+                            print(
+                                "User selected location: ${pickedLocation!.latitude}, ${pickedLocation!.longitude}");
+
+                            List<Placemark> placemarks =
+                                await placemarkFromCoordinates(
+                              pickedLocation!.latitude,
+                              pickedLocation!.longitude,
+                            );
+
+                            selectedCountry = placemarks[0].country;
+                            selectedCity = placemarks[0].subAdministrativeArea;
+
+                            setState(() {
+                              selectedLocation =
+                                  "$selectedCity, $selectedCountry";
+                            });
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: height * 0.01,
+                              horizontal: width * 0.015),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
                               color: AppColors.primaryColor,
-                              size: 20,
                             ),
-                          ],
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: height * 0.012,
+                                    horizontal: width * 0.025),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: AppColors.primaryColor,
+                                ),
+                                child: Icon(
+                                  Icons.my_location,
+                                  color: AppColors.whiteColor,
+                                ),
+                              ),
+                              SizedBox(
+                                width: width * 0.02,
+                              ),
+                              Text(
+                                selectedLocation ??
+                                    AppLocalizations.of(context)!
+                                        .chooseEventLocation,
+                                style: AppStyle.semi16Primary,
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: AppColors.primaryColor,
+                                size: 20,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -289,13 +331,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
     if (formKey.currentState!.validate() &&
         selectedDate != null &&
         selectedTime != null) {
-      Event event = Event(
+      EventModel event = EventModel(
           title: titleController.text,
           description: descriptionController.text,
           image: selectedImage,
           eventName: selectedEvent,
           eventDate: selectedDate!,
-          eventTime: formatedTime);
+          eventTime: formatedTime,
+          location: pickedLocation!,
+          country: selectedCountry!,
+          city: selectedCity!);
       // var userProvider = Provider.of<UserProvider>(context, listen: false);
 
       await FirebaseUtils.addEventToFireStore(
@@ -307,10 +352,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
           userProvider.currentUser!.id,
         );
         ToastMessage.toastMsg(
-            AppLocalizations.of(context)!.eventAddedSuccessfully);
+            AppLocalizations.of(context)!.eventAddedSuccessfully,
+            AppColors.greenColor);
         Navigator.pop(context);
       });
-
     }
   }
 
