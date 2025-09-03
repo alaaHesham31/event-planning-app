@@ -24,8 +24,7 @@ class _HomeTabState extends State<HomeTab> {
   Widget build(BuildContext context) {
     var eventListProvider = Provider.of<EventListProvider>(context);
     userProvider = Provider.of<UserProvider>(context);
-    // Reset or clear old events if needed
-    // eventListProvider.clearAllEventLists();
+
     if (eventListProvider.allEventsList.isEmpty) {
       eventListProvider.loadEventCategories(context);
       eventListProvider.loadAllEvents(userProvider.currentUser!.id);
