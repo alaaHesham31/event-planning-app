@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EventItemWidget extends StatelessWidget {
-  Event event;
+  EventModel event;
 
   EventItemWidget({super.key, required this.event});
 
@@ -73,8 +73,8 @@ class EventItemWidget extends StatelessWidget {
                     // update favourite
                     var userProvider = Provider.of<UserProvider>(context, listen: false);
 
-                    eventListProvider.updateIsFavouriteEvent(event, userProvider.currentUser!.id);
-                    ToastMessage.toastMsg(AppLocalizations.of(context)!.eventUpdatedSuccessfully);
+                    eventListProvider.toggleFavourite(event, userProvider.currentUser!.id);
+                    ToastMessage.toastMsg(AppLocalizations.of(context)!.eventUpdatedSuccessfully,  AppColors.greenColor);
                   },
                   icon: Icon(
                     event.isFavourite == true

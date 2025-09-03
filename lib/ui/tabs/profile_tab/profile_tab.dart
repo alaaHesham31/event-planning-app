@@ -1,9 +1,9 @@
 
-import 'package:evently_app/auth/login/login_screen.dart';
 import 'package:evently_app/providers/app_language_provider.dart';
 import 'package:evently_app/providers/app_theme_provider.dart';
 import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/providers/user_provider.dart';
+import 'package:evently_app/ui/auth/login/login_screen.dart';
 import 'package:evently_app/ui/tabs/profile_tab/language_bottom_sheet.dart';
 import 'package:evently_app/ui/tabs/profile_tab/theme_bottom_sheet.dart';
 import 'package:evently_app/utils/app_colors.dart';
@@ -157,7 +157,7 @@ class _ProfileTabState extends State<ProfileTab> {
               child: ElevatedButton(
                 onPressed: () {
                   // Clear all event-related data first
-                  eventListProvider.clearAllEventLists();
+                  eventListProvider.clearCache();
 
 
 

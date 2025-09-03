@@ -8,7 +8,8 @@ import 'package:evently_app/ui/widgets/tab_event_item.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:evently_app/utils/firebase_utils.dart';
+import 'package:evently_app/utils/toast_msg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:geocoding/geocoding.dart';
@@ -31,6 +32,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
   late TextEditingController titleController;
   late TextEditingController descriptionController;
 
+  String? eventId;
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
   String? formatedDate;
@@ -39,7 +41,6 @@ class _EditEventScreenState extends State<EditEventScreen> {
   String? selectedCity;
   LatLng? selectedLocation;
 
-
   late String selectedImage;
   late String selectedEvent;
 
@@ -47,40 +48,44 @@ class _EditEventScreenState extends State<EditEventScreen> {
   late UserProvider userProvider;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
 
-    final args = ModalRoute.of(context)!.settings.arguments as EventModel;
+    // We can’t use ModalRoute here, so defer it
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args = ModalRoute.of(context)!.settings.arguments as EventModel;
 
-    // initialize only once
-    titleController = TextEditingController(text: args.title);
-    descriptionController = TextEditingController(text: args.description);
+      setState(() {
+        titleController = TextEditingController(text: args.title);
+        descriptionController = TextEditingController(text: args.description);
 
-    selectedImage = args.image;
-    selectedEvent = args.eventName;
-    selectedDate = args.eventDate;
-    formatedDate = DateFormat('dd/MM/yyyy').format(selectedDate!);
-    formatedTime = args.eventTime;
-    selectedLocation = args.location;
-    selectedCity = args.city;
-    selectedCountry = args.country;
+        eventId = args.id;
+        selectedImage = args.image;
+        selectedEvent = args.eventName;
+        selectedDate = args.eventDate;
+        formatedDate = DateFormat('dd/MM/yyyy').format(selectedDate!);
+        formatedTime = args.eventTime;
+        selectedLocation = args.location;
+        selectedCity = args.city;
+        selectedCountry = args.country;
 
-    // get providers
-    eventListProvider = Provider.of<EventListProvider>(context, listen: false);
-    userProvider = Provider.of<UserProvider>(context, listen: false);
+        // providers
+        eventListProvider =
+            Provider.of<EventListProvider>(context, listen: false);
+        userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    // sync provider selected index AFTER build finishes
-    final index =
-        eventListProvider.categoryEventsNameList.indexOf(selectedEvent);
-    if (index != -1) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        eventListProvider.changeSelectedIndex(
-          index,
-          userProvider.currentUser!.id,
-        );
+        final index = eventListProvider.categoryEventsNameList
+            .indexOf(selectedEvent);
+        if (index != -1) {
+          eventListProvider.changeSelectedIndex(
+            index,
+            userProvider.currentUser!.id,
+          );
+        }
       });
-    }
+    });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -322,24 +327,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                     ),
                     CustomElevatedButton(
                       onClick: () async {
-                        String? uId =
-                            FirebaseAuth.instance.currentUser?.uid ?? '';
-                        EventModel eventModel = EventModel(
-                            title: titleController.text,
-                            description: descriptionController.text,
-                            image: selectedImage,
-                            eventName: selectedEvent,
-                            eventDate: selectedDate!,
-                            eventTime: formatedTime!,
-                            location: selectedLocation!,
-                            country: '',
-                            city: '');
-                        if (formKey.currentState!.validate()) {
-                          await eventListProvider.updateEvent(
-                              eventModel: eventModel, uId: uId);
-                          Navigator.of(context).pop();
-                        }
-                        ;
+                        updateEventDetails();
                       },
                       textStyle: AppStyle.semi20White,
                       text: AppLocalizations.of(context)!.updateEvent,
@@ -372,12 +360,48 @@ class _EditEventScreenState extends State<EditEventScreen> {
   }
 
   void chooseTime() async {
-    var chooseTime =
-        await showTimePicker(context: context, initialTime: TimeOfDay.now());
-    selectedTime = chooseTime;
-    formatedTime = selectedTime!.format(context);
-    setState(() {});
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: selectedTime ?? TimeOfDay.now(),
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        selectedTime = pickedTime;
+        formatedTime = pickedTime.format(context);
+      });
+    }
   }
 
-  updateEventDetails() async {}
+  updateEventDetails() async {
+    if (formKey.currentState!.validate()) {
+      final eventModel = EventModel(
+        id: eventId!,
+        title: titleController.text,
+        description: descriptionController.text,
+        image: selectedImage,
+        eventName: selectedEvent,
+        eventDate: selectedDate!,
+        eventTime: formatedTime!,
+        country: selectedCountry!,
+        city: selectedCity!,
+        location: selectedLocation!,
+      );
+
+      FirebaseUtils.updateEvent(userProvider.currentUser!.id, eventModel)
+          .then((_) {
+        eventListProvider.changeSelectedIndex(
+          0,
+          userProvider.currentUser!.id,
+        );
+        print("============================= updated========================");
+        ToastMessage.toastMsg(
+          AppLocalizations.of(context)!.eventAddedSuccessfully,
+          AppColors.greenColor,
+        );
+
+        Navigator.pop(context);
+      });
+    }
+  }
 }

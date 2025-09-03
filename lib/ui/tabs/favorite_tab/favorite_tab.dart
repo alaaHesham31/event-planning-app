@@ -20,7 +20,7 @@ class FavoriteTab extends StatelessWidget {
 
     var height = MediaQuery.of(context).size.height;
     if(eventProviderList.favouriteEventsList.isEmpty){
-      eventProviderList.getFavouriteEvent(userProvider.currentUser!.id);
+      eventProviderList.loadFavourites(userProvider.currentUser!.id);
     }
     return SafeArea(
       child: Padding(

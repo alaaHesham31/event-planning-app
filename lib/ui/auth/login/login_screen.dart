@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
                         controller: viewModel.emailController,
                         validator: (text) {
                           if (text == null || text.isEmpty) {
-                            return 'Please Enter your Email';
+                            return AppLocalizations.of(context)!.pleaseEnterEmail;
                           }
                           return null;
                         },
@@ -82,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
                       controller: viewModel.passwordController,
                       validator: (text) {
                         if (text == null || text.isEmpty) {
-                          return 'Please Enter your Password';
+                          return AppLocalizations.of(context)!.pleaseEnterPassword;
                         }
                         return null;
                       },

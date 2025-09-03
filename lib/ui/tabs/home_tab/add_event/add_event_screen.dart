@@ -343,8 +343,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
           city: selectedCity!);
       // var userProvider = Provider.of<UserProvider>(context, listen: false);
 
-      await FirebaseUtils.addEventToFireStore(
-              event, userProvider.currentUser!.id)
+      await FirebaseUtils.addEvent(
+               userProvider.currentUser!.id, event)
           .then((onValue) {
         // Update selected index after success
         eventListProvider.changeSelectedIndex(

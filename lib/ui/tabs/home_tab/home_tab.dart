@@ -1,5 +1,6 @@
 import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/providers/user_provider.dart';
+import 'package:evently_app/ui/tabs/home_tab/event_details_screen.dart';
 import 'package:evently_app/ui/widgets/event_item_widget.dart';
 import 'package:evently_app/ui/widgets/tab_event_item.dart';
 import 'package:evently_app/utils/app_colors.dart';
@@ -18,21 +19,20 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab> {
   late UserProvider userProvider;
+
   @override
   Widget build(BuildContext context) {
     var eventListProvider = Provider.of<EventListProvider>(context);
-     userProvider = Provider.of<UserProvider>(context);
+    userProvider = Provider.of<UserProvider>(context);
     // Reset or clear old events if needed
     // eventListProvider.clearAllEventLists();
     if (eventListProvider.allEventsList.isEmpty) {
-      eventListProvider.getEventsNameList(context);
-      eventListProvider.getEventsIconList(context);
-      eventListProvider.getAllEventsList(userProvider.currentUser!.id);
+      eventListProvider.loadEventCategories(context);
+      eventListProvider.loadAllEvents(userProvider.currentUser!.id);
     }
 
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
-
 
     return Scaffold(
       appBar: AppBar(
@@ -79,7 +79,8 @@ class _HomeTabState extends State<HomeTab> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          eventListProvider.changeSelectedIndex(index, userProvider.currentUser!.id);
+                          eventListProvider.changeSelectedIndex(
+                              index, userProvider.currentUser!.id);
                         },
                         child: TabEventItem(
                           backgroundSelectedColor: AppColors.whiteColor,
@@ -89,8 +90,10 @@ class _HomeTabState extends State<HomeTab> {
                           selectedTextStyle: AppStyle.bold14Primary,
                           unSelectedTextStyle: AppStyle.bold14White,
                           isSelected: eventListProvider.selectedIndex == index,
-                          eventName: eventListProvider.fullEventsNameList [index],
-                          eventIconPath: eventListProvider.fullEventsIconList[index],
+                          eventName:
+                              eventListProvider.fullEventsNameList[index],
+                          eventIconPath:
+                              eventListProvider.fullEventsIconList[index],
                         ),
                       );
                     },
@@ -105,23 +108,32 @@ class _HomeTabState extends State<HomeTab> {
           Expanded(
             child: eventListProvider.filteredEventsList.isEmpty
                 ? Center(
-              child: Text(AppLocalizations.of(context)!.noEventAddedYet),
-            )
+                    child: Text(AppLocalizations.of(context)!.noEventAddedYet),
+                  )
                 : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: ListView.separated(
-                separatorBuilder: (context, index) {
-                  return SizedBox(
-                    height: height * 0.02,
-                  );
-                },
-                itemCount: eventListProvider.filteredEventsList.length,
-                itemBuilder: (context, index) {
-                  return EventItemWidget(
-                      event: eventListProvider.filteredEventsList[index]);
-                },
-              ),
-            ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) {
+                        return SizedBox(
+                          height: height * 0.02,
+                        );
+                      },
+                      itemCount: eventListProvider.filteredEventsList.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                                EventDetailsScreen.routeName,
+                                arguments: eventListProvider
+                                    .filteredEventsList[index]);
+                          },
+                          child: EventItemWidget(
+                              event:
+                                  eventListProvider.filteredEventsList[index]),
+                        );
+                      },
+                    ),
+                  ),
           ),
           SizedBox(
             height: height * 0.02,
