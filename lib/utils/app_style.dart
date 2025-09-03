@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 class AppStyle {
   static TextStyle bold20Primary = GoogleFonts.inter(
       fontSize: 20, color: AppColors.primaryColor, fontWeight: FontWeight.w700);
+  static TextStyle bold16Primary = GoogleFonts.inter(
+      fontSize: 16, color: AppColors.primaryColor, fontWeight: FontWeight.w700);
   static TextStyle bold20Black = GoogleFonts.inter(
       fontSize: 20, color: AppColors.blackColor, fontWeight: FontWeight.w700);
   static TextStyle semi20Primary = GoogleFonts.inter(
@@ -20,6 +22,8 @@ class AppStyle {
   );
   static TextStyle semi16Black = GoogleFonts.inter(
       fontSize: 16, color: AppColors.blackColor, fontWeight: FontWeight.w500);
+  static TextStyle semi14Black = GoogleFonts.inter(
+      fontSize: 14, color: AppColors.blackColor, fontWeight: FontWeight.w500);
   static TextStyle semi16Grey = GoogleFonts.inter(
       fontSize: 16, color: AppColors.greyColor, fontWeight: FontWeight.w500
   );
