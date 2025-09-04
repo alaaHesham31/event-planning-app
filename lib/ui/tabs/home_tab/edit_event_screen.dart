@@ -1,4 +1,5 @@
 import 'package:evently_app/model/event_model.dart';
+import 'package:evently_app/providers/app_theme_provider.dart';
 import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/tabs/home_tab/add_event/location_picker_screen.dart';
@@ -74,8 +75,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
             Provider.of<EventListProvider>(context, listen: false);
         userProvider = Provider.of<UserProvider>(context, listen: false);
 
-        final index = eventListProvider.categoryEventsNameList
-            .indexOf(selectedEvent);
+        final index =
+            eventListProvider.categoryEventsNameList.indexOf(selectedEvent);
         if (index != -1) {
           eventListProvider.changeSelectedIndex(
             index,
@@ -86,9 +87,10 @@ class _EditEventScreenState extends State<EditEventScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
+    final appThemeProvider = Provider.of<AppThemeProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -97,7 +99,6 @@ class _EditEventScreenState extends State<EditEventScreen> {
         ),
         iconTheme: IconThemeData(color: AppColors.primaryColor),
         centerTitle: true,
-        backgroundColor: AppColors.nodeWhiteColor,
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
@@ -141,9 +142,13 @@ class _EditEventScreenState extends State<EditEventScreen> {
                       child: TabEventItem(
                         backgroundSelectedColor: AppColors.primaryColor,
                         borderUnSelectedColor: AppColors.primaryColor,
-                        selectedIconColor: AppColors.whiteColor,
+                        selectedIconColor: appThemeProvider.isLightTheme()
+                            ? AppColors.whiteColor
+                            : AppColors.navyColor,
                         unSelectedIconColor: AppColors.primaryColor,
-                        selectedTextStyle: AppStyle.bold14White,
+                        selectedTextStyle: appThemeProvider.isLightTheme()
+                            ? AppStyle.bold14White
+                            : AppStyle.bold14Black,
                         unSelectedTextStyle: AppStyle.bold14Primary,
                         isSelected: eventListProvider.selectedIndex == index,
                         eventName:
@@ -175,11 +180,20 @@ class _EditEventScreenState extends State<EditEventScreen> {
                         }
                         return null;
                       },
-                      textStyle: AppStyle.semi16Black,
                       hintText: AppLocalizations.of(context)!.eventTitle,
-                      hintTextStyle: AppStyle.semi16Grey,
-                      borderColor: AppColors.greyColor,
-                      prefixIcon: Image.asset(AppImage.editIcon),
+                      textStyle: appThemeProvider.isLightTheme()
+                          ? AppStyle.semi16Grey
+                          : AppStyle.semi16White,
+                      hintTextStyle: appThemeProvider.isLightTheme()
+                          ? AppStyle.semi16Grey
+                          : AppStyle.semi16White,
+                      borderColor: appThemeProvider.isLightTheme()
+                          ? AppColors.greyColor
+                          : AppColors.whiteColor,
+                      prefixIcon: Icon(Icons.edit),
+                      prefixIconColor: appThemeProvider.isLightTheme()
+                          ? AppColors.greyColor
+                          : AppColors.whiteColor,
                     ),
                     SizedBox(
                       height: 16,
@@ -199,22 +213,32 @@ class _EditEventScreenState extends State<EditEventScreen> {
                         }
                         return null;
                       },
-                      textStyle: AppStyle.semi16Black,
                       maxLines: 4,
                       hintText: AppLocalizations.of(context)!.eventDescription,
-                      hintTextStyle: AppStyle.semi16Grey,
-                      borderColor: AppColors.greyColor,
+                      textStyle: appThemeProvider.isLightTheme()
+                          ? AppStyle.semi16Grey
+                          : AppStyle.semi16White,
+                      hintTextStyle: appThemeProvider.isLightTheme()
+                          ? AppStyle.semi16Grey
+                          : AppStyle.semi16White,
+                      borderColor: appThemeProvider.isLightTheme()
+                          ? AppColors.greyColor
+                          : AppColors.whiteColor,
+
                     ),
                     SizedBox(
                       height: 16,
                     ),
                     Row(
                       children: [
-                        Image.asset(AppImage.eventDateIcon),
+                        Image.asset(AppImage.eventDateIcon,
+                          color: appThemeProvider.isLightTheme()
+                              ? AppColors.blackColor
+                              : AppColors.whiteColor,),
                         SizedBox(width: 12),
                         Text(
                           AppLocalizations.of(context)!.eventDate,
-                          style: AppStyle.semi16Black,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         Spacer(),
                         InkWell(
@@ -232,13 +256,16 @@ class _EditEventScreenState extends State<EditEventScreen> {
                     ),
                     Row(
                       children: [
-                        Image.asset(AppImage.eventTimeIcon),
+                        Image.asset(AppImage.eventTimeIcon,
+                          color: appThemeProvider.isLightTheme()
+                              ? AppColors.blackColor
+                              : AppColors.whiteColor,),
                         SizedBox(
                           width: 12,
                         ),
                         Text(
                           AppLocalizations.of(context)!.eventTime,
-                          style: AppStyle.semi16Black,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         Spacer(),
                         InkWell(
@@ -256,7 +283,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
                     ),
                     Text(
                       AppLocalizations.of(context)!.location,
-                      style: AppStyle.semi16Black,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     SizedBox(
                       height: 16,
@@ -302,7 +329,9 @@ class _EditEventScreenState extends State<EditEventScreen> {
                               ),
                               child: Icon(
                                 Icons.my_location,
-                                color: AppColors.whiteColor,
+                                color: appThemeProvider.isLightTheme()
+                                    ? AppColors.whiteColor
+                                    : AppColors.navyColor,
                               ),
                             ),
                             SizedBox(

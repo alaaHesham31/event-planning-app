@@ -1,3 +1,4 @@
+import 'package:evently_app/providers/app_language_provider.dart';
 import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/tabs/home_tab/event_details_screen.dart';
@@ -6,9 +7,12 @@ import 'package:evently_app/ui/widgets/tab_event_item.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
+import 'package:evently_app/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+
+import '../../../providers/app_theme_provider.dart';
 
 class HomeTab extends StatefulWidget {
   HomeTab({super.key});
@@ -19,11 +23,14 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab> {
   late UserProvider userProvider;
+  var appThemeProvider;
 
   @override
   Widget build(BuildContext context) {
     var eventListProvider = Provider.of<EventListProvider>(context);
     userProvider = Provider.of<UserProvider>(context);
+     appThemeProvider = Provider.of<AppThemeProvider>(context, listen: false);
+
 
     if (eventListProvider.allEventsList.isEmpty) {
       eventListProvider.loadEventCategories(context);
@@ -35,8 +42,8 @@ class _HomeTabState extends State<HomeTab> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.primaryColor,
         title: buildAppBarContent(width),
+        backgroundColor: appThemeProvider.isLightTheme()? AppColors.primaryColor: AppColors.navyColor,
       ),
       body: Column(
         children: [
@@ -44,7 +51,7 @@ class _HomeTabState extends State<HomeTab> {
             height: height * 0.11,
             padding: EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
-              color: AppColors.primaryColor,
+              color: appThemeProvider.isLightTheme()? AppColors.primaryColor : AppColors.navyColor,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(24),
                 bottomRight: Radius.circular(24),
@@ -82,11 +89,11 @@ class _HomeTabState extends State<HomeTab> {
                               index, userProvider.currentUser!.id);
                         },
                         child: TabEventItem(
-                          backgroundSelectedColor: AppColors.whiteColor,
-                          borderUnSelectedColor: AppColors.whiteColor,
-                          selectedIconColor: AppColors.primaryColor,
+                          backgroundSelectedColor:appThemeProvider.isLightTheme()? AppColors.whiteColor : AppColors.primaryColor,
+                          borderUnSelectedColor: appThemeProvider.isLightTheme()? AppColors.whiteColor : AppColors.primaryColor,
+                          selectedIconColor: appThemeProvider.isLightTheme()? AppColors.primaryColor : AppColors.whiteColor,
                           unSelectedIconColor: AppColors.whiteColor,
-                          selectedTextStyle: AppStyle.bold14Primary,
+                          selectedTextStyle: appThemeProvider.isLightTheme()? AppStyle.bold14Primary : AppStyle.bold14White,
                           unSelectedTextStyle: AppStyle.bold14White,
                           isSelected: eventListProvider.selectedIndex == index,
                           eventName:
@@ -143,6 +150,9 @@ class _HomeTabState extends State<HomeTab> {
   }
 
   Widget buildAppBarContent(double width) {
+    final themeProvider = Provider.of<AppThemeProvider>(context, listen: false);
+    final langProvider = Provider.of<AppLanguageProvider>(context, listen: false);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -161,27 +171,47 @@ class _HomeTabState extends State<HomeTab> {
         ),
         Row(
           children: [
-            Icon(
-              Icons.sunny,
-              color: AppColors.whiteColor,
-            ),
-            SizedBox(
-              width: width * 0.02,
-            ),
-            Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
+            // Theme Toggle
+            GestureDetector(
+              onTap: () {
+                themeProvider.changeAppTheme(
+                  themeProvider.isLightTheme()
+                      ? AppTheme.darkTheme
+                      : AppTheme.lightTheme,
+                );
+              },
+              child: Icon(
+                themeProvider.isLightTheme()
+                    ? Icons.sunny
+                    : Icons.nightlight_round,
                 color: AppColors.whiteColor,
-                borderRadius: BorderRadius.circular(8),
               ),
-              child: Text(
-                'EN',
-                style: AppStyle.bold14Primary,
+            ),
+            SizedBox(width: width * 0.04),
+
+            // Language Toggle
+            GestureDetector(
+              onTap: () {
+                langProvider.changeAppLanguage(
+                  langProvider.appLanguage == 'en' ? 'ar' : 'en',
+                );
+              },
+              child: Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.whiteColor,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  langProvider.appLanguage.toUpperCase(),
+                  style: themeProvider.isLightTheme()
+                      ? AppStyle.bold14Primary
+                      : AppStyle.bold14Black,
+                ),
               ),
             ),
           ],
-        ),
-      ],
+        ),      ],
     );
   }
 }

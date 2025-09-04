@@ -1,4 +1,5 @@
 import 'package:evently_app/model/event_model.dart';
+import 'package:evently_app/providers/app_theme_provider.dart';
 import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/utils/app_colors.dart';
@@ -17,6 +18,8 @@ class EventItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var eventListProvider = Provider.of<EventListProvider>(context);
+    final appThemeProvider = Provider.of<AppThemeProvider>(context);
+
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return Container(
@@ -39,7 +42,7 @@ class EventItemWidget extends StatelessWidget {
             margin: EdgeInsets.symmetric(
                 vertical: height * 0.01, horizontal: width * 0.02),
             decoration: BoxDecoration(
-              color: AppColors.nodeWhiteColor,
+              color: appThemeProvider.isLightTheme()? AppColors.nodeWhiteColor : AppColors.navyColor,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -58,7 +61,7 @@ class EventItemWidget extends StatelessWidget {
             margin: EdgeInsets.symmetric(
                 vertical: height * 0.01, horizontal: width * 0.02),
             decoration: BoxDecoration(
-              color: AppColors.nodeWhiteColor,
+              color: appThemeProvider.isLightTheme()? AppColors.nodeWhiteColor : AppColors.navyColor,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -66,7 +69,7 @@ class EventItemWidget extends StatelessWidget {
               children: [
                 Text(
                   event.title,
-                  style: AppStyle.bold16Black,
+                  style:Theme.of(context).textTheme.bodyMedium,
                 ),
                 IconButton(
                   onPressed: () {

@@ -1,5 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:evently_app/manager/location_manager.dart';
 import 'package:evently_app/model/event_model.dart';
+import 'package:evently_app/providers/app_theme_provider.dart';
 import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/tabs/home_tab/event_details_screen.dart';
@@ -7,9 +9,10 @@ import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class MapTab extends StatefulWidget {
   const MapTab({super.key});
@@ -26,17 +29,13 @@ class _MapTabState extends State<MapTab> {
 
   GoogleMapController? _mapController;
 
-  Set<Marker> _markers = {
-    const Marker(
-      markerId: MarkerId("initial"),
-      position: LatLng(30.02, 31.14),
-    )
-  };
+  String? _selectedEventId; // Track which circle is selected
 
   @override
   Widget build(BuildContext context) {
     var eventListProvider = Provider.of<EventListProvider>(context);
     var userProvider = Provider.of<UserProvider>(context);
+   var  themeProvider = Provider.of<AppThemeProvider>(context, listen: false);
 
     if (eventListProvider.allEventsList.isEmpty) {
       eventListProvider.loadEventCategories(context);
@@ -51,11 +50,12 @@ class _MapTabState extends State<MapTab> {
             myLocationEnabled: false,
             zoomControlsEnabled: false,
             initialCameraPosition: _initialPosition,
-            markers: _buildMarkers(eventListProvider),
+            circles: _buildCircles(eventListProvider),
             onMapCreated: (controller) {
               _mapController = controller;
             },
           ),
+          if (_selectedEventId != null) _buildInfoWindow(eventListProvider),
           Positioned(
             bottom: 32,
             left: 24,
@@ -65,18 +65,14 @@ class _MapTabState extends State<MapTab> {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: eventListProvider.allEventsList.length,
-                separatorBuilder: (context, index) => SizedBox(
-                  width: 12,
-                ),
+                separatorBuilder: (context, index) => const SizedBox(width: 12),
                 itemBuilder: (context, index) {
+                  final event = eventListProvider.allEventsList[index];
                   return GestureDetector(
                     onTap: () {
-                      Navigator.of(context).pushNamed(
-                          EventDetailsScreen.routeName,
-                          arguments: eventListProvider.allEventsList[index]);
+                      _onEventCardTap(event);
                     },
-                    child: _buildEventItem(
-                        event: eventListProvider.allEventsList[index]),
+                    child: _buildEventItem(event: event),
                   );
                 },
               ),
@@ -89,17 +85,6 @@ class _MapTabState extends State<MapTab> {
         child: FloatingActionButton(
           onPressed: () async {
             var location = await LocationManager.getCurrentLocation();
-            _listenOnLocationChanged();
-
-            // Update marker to current location
-            setState(() {
-              _markers = {
-                Marker(
-                  markerId: const MarkerId("current"),
-                  position: LatLng(location.latitude, location.longitude),
-                )
-              };
-            });
 
             if (_mapController != null) {
               _mapController!.animateCamera(
@@ -116,9 +101,11 @@ class _MapTabState extends State<MapTab> {
             borderRadius: BorderRadius.circular(16.0),
           ),
           backgroundColor: AppColors.primaryColor,
-          child: const Icon(
+          child:  Icon(
             Icons.my_location,
-            color: AppColors.whiteColor,
+            color: themeProvider.isLightTheme()
+                ? AppColors.whiteColor
+                : AppColors.navyColor,
             size: 32,
           ),
         ),
@@ -127,87 +114,114 @@ class _MapTabState extends State<MapTab> {
     );
   }
 
-  _listenOnLocationChanged() {
-    var stream =
-        Geolocator.getPositionStream(locationSettings: LocationSettings());
-    stream.listen((Position newLocation) {
-      print('new location $newLocation');
+  void _onEventCardTap(EventModel event) {
+    final newLatLng = LatLng(event.location.latitude, event.location.longitude);
 
-      var newLatLng = LatLng(newLocation.latitude, newLocation.longitude);
-
-      _mapController!.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(target: newLatLng, zoom: 16),
-        ),
-      );
-      _markers = {
-        Marker(
-          markerId: const MarkerId("current"),
-          position: newLatLng,
-        ),
-      };
-      setState(() {});
+    setState(() {
+      _selectedEventId = event.id; // Highlight circle
     });
+
+    _mapController?.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(target: newLatLng, zoom: 16),
+      ),
+    );
   }
 
-  Set<Marker> _buildMarkers(EventListProvider eventListProvider) {
-    final eventMarkers = eventListProvider.allEventsList.map((event) {
-      return Marker(
-        markerId: MarkerId("event${event.id}"),
-        position: LatLng(
-          event.location.latitude,
-          event.location.longitude,
+  Widget _buildInfoWindow(EventListProvider provider) {
+    var themeProvider = Provider.of<AppThemeProvider>(context, listen: false);
+
+    final event = provider.allEventsList
+        .firstWhereOrNull((e) => e.id == _selectedEventId);
+    if (event == null) return const SizedBox.shrink();
+
+    return Positioned(
+      top: 80,
+      left: 20,
+      right: 20,
+      child: Card(
+        color: themeProvider.isLightTheme()
+            ? AppColors.whiteColor
+            : AppColors.navyColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
         ),
-        infoWindow: InfoWindow(
-          title: event.title,
-          snippet: "${event.city}, ${event.country}",
-          onTap: () {
-            Navigator.of(context).pushNamed(
-              EventDetailsScreen.routeName,
-              arguments: event,
-            );
-          },
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(event.title, style: AppStyle.bold16Primary),
+              const SizedBox(height: 6),
+              Text("${event.city}, ${event.country}",
+                  style: Theme.of(context).textTheme.bodyMedium),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(
+                    EventDetailsScreen.routeName,
+                    arguments: event,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child:  Text(AppLocalizations.of(context)!.viewDetails, style: AppStyle.bold14White,),
+              )
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Set<Circle> _buildCircles(EventListProvider provider) {
+    return provider.allEventsList.map((event) {
+      final isSelected = event.id == _selectedEventId;
+      return Circle(
+        circleId: CircleId(event.id),
+        center: LatLng(event.location.latitude, event.location.longitude),
+        radius: 40,
+        fillColor: isSelected ? AppColors.primaryColor : Colors.black,
+        strokeColor: isSelected
+            ? AppColors.primaryColor.withValues(alpha: 0.4)
+            : Colors.black.withValues(alpha: 0.3),
+        strokeWidth: 10,
       );
     }).toSet();
-
-    LatLng _currentLocation = LatLng(30.02, 31.14);
-    // Add current location marker if available
-    if (_currentLocation != null) {
-      eventMarkers.add(
-        Marker(
-          markerId: const MarkerId("current"),
-          position: _currentLocation!,
-        ),
-      );
-    }
-
-    return eventMarkers;
   }
 
-
-  _buildEventItem({required EventModel event}) {
+  Widget _buildEventItem({required EventModel event}) {
+    var  themeProvider = Provider.of<AppThemeProvider>(context, listen: false);
 
     return Container(
       height: 100,
       width: 300,
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: AppColors.nodeWhiteColor,
+        color: themeProvider.isLightTheme()
+            ? AppColors.nodeWhiteColor
+            : AppColors.navyColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.primaryColor, width: 2),
       ),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image(
-              image: AssetImage(event.image),
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image(
+                image: AssetImage(event.image),
+                height: 80,
+                width: 80,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-          SizedBox(
-            width: 4,
-          ),
+          const SizedBox(width: 6),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,23 +232,19 @@ class _MapTabState extends State<MapTab> {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 Row(
                   children: [
                     Image.asset(
                       AppImage.mapIcon,
-                      color: AppColors.blackColor,
+                      color:themeProvider.isLightTheme() ? AppColors.blackColor : AppColors.whiteColor,
                       height: 20,
                     ),
-                    SizedBox(
-                      width: 4,
-                    ),
+                    const SizedBox(width: 4),
                     Expanded(
                       child: Text(
                         '${event.city} , ${event.country}',
-                        style: AppStyle.semi14Black,
+                        style: Theme.of(context).textTheme.bodyMedium,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

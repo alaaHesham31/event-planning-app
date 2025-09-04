@@ -1,3 +1,5 @@
+import 'package:evently_app/providers/app_theme_provider.dart';
+import 'package:evently_app/ui/auth/login/login_screen.dart';
 import 'package:evently_app/ui/auth/register/register_navigator.dart';
 import 'package:evently_app/ui/auth/register/register_screen_view_model.dart';
 import 'package:evently_app/ui/widgets/custom_elevated_button.dart';
@@ -42,17 +44,18 @@ class _RegisterScreenState extends State<RegisterScreen>
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
+    final appThemeProvider = Provider.of<AppThemeProvider>(context, listen: false);
+
+
 
     return ChangeNotifierProvider(
       create: (context) => viewModel,
       child: Scaffold(
-        backgroundColor: AppColors.nodeWhiteColor,
         appBar: AppBar(
-          backgroundColor: AppColors.nodeWhiteColor,
           centerTitle: true,
           title: Text(
             AppLocalizations.of(context)!.register,
-            style: AppStyle.semi16Black,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
         body: Padding(
@@ -77,11 +80,12 @@ class _RegisterScreenState extends State<RegisterScreen>
                           }
                           return null;
                         },
-                        textStyle: AppStyle.semi16Grey,
+                        textStyle: appThemeProvider.isLightTheme()? AppStyle.semi16Grey : AppStyle.semi16White,
                         hintText: AppLocalizations.of(context)!.name,
-                        hintTextStyle: AppStyle.semi16Grey,
-                        prefixIcon: Image.asset(AppImage.emailIcon),
-                        borderColor: AppColors.greyColor,
+                        hintTextStyle:appThemeProvider.isLightTheme()? AppStyle.semi16Grey : AppStyle.semi16White,
+                        prefixIcon: Icon(Icons.person),
+                        prefixIconColor:  appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
+                        borderColor: appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
                       ),
                       SizedBox(
                         height: height * 0.02,
@@ -99,11 +103,13 @@ class _RegisterScreenState extends State<RegisterScreen>
                             }
                             return null;
                           },
-                          textStyle: AppStyle.semi16Grey,
+                        textStyle: appThemeProvider.isLightTheme()? AppStyle.semi16Grey : AppStyle.semi16White,
                           hintText: AppLocalizations.of(context)!.email,
-                          hintTextStyle: AppStyle.semi16Grey,
-                          prefixIcon: Image.asset(AppImage.emailIcon),
-                          borderColor: AppColors.greyColor),
+                        hintTextStyle:appThemeProvider.isLightTheme()? AppStyle.semi16Grey : AppStyle.semi16White,
+                        prefixIcon: Icon(Icons.email_rounded),
+                        prefixIconColor:  appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
+                        borderColor: appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
+                      ),
                       SizedBox(
                         height: height * 0.02,
                       ),
@@ -119,14 +125,15 @@ class _RegisterScreenState extends State<RegisterScreen>
                           }
                           return null;
                         },
-                        textStyle: AppStyle.semi16Grey,
+                        textStyle: appThemeProvider.isLightTheme()? AppStyle.semi16Grey : AppStyle.semi16White,
                         hintText: AppLocalizations.of(context)!.password,
-                        hintTextStyle: AppStyle.semi16Grey,
-                        borderColor: AppColors.greyColor,
-                        prefixIcon: Image.asset(AppImage.passwordIcon),
-                        suffixIcon: Image.asset(
-                          AppImage.viewIcon,
-                        ),
+                        hintTextStyle:appThemeProvider.isLightTheme()? AppStyle.semi16Grey : AppStyle.semi16White,
+                        borderColor: appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
+                        prefixIcon: Icon(Icons.lock_rounded),
+                        prefixIconColor:  appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
+                        suffixIcon: Icon(Icons.remove_red_eye_sharp),
+                        suffixIconColor:  appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
+
                       ),
                       SizedBox(
                         height: height * 0.02,
@@ -144,15 +151,18 @@ class _RegisterScreenState extends State<RegisterScreen>
                           }
                           return null;
                         },
-                        textStyle: AppStyle.semi16Grey,
+                        textStyle: appThemeProvider.isLightTheme()? AppStyle.semi16Grey : AppStyle.semi16White,
                         hintText: AppLocalizations.of(context)!.rePassword,
-                        hintTextStyle: AppStyle.semi16Grey,
-                        borderColor: AppColors.greyColor,
-                        prefixIcon: Image.asset(AppImage.passwordIcon),
-                        suffixIcon: Image.asset(AppImage.viewIcon),
+                        hintTextStyle:appThemeProvider.isLightTheme()? AppStyle.semi16Grey : AppStyle.semi16White,
+                        borderColor: appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
+                        prefixIcon: Icon(Icons.lock_rounded),
+                        prefixIconColor:  appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
+                        suffixIcon: Icon(Icons.remove_red_eye_sharp),
+                        suffixIconColor:  appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
+
                       ),
                       SizedBox(
-                        height: height * 0.02,
+                        height: height * 0.08,
                       ),
                       CustomElevatedButton(
                         onClick: viewModel.register, // Disable while loading
@@ -167,14 +177,16 @@ class _RegisterScreenState extends State<RegisterScreen>
                   height: height * 0.02,
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, LoginScreen.routeName);
+                  },
                   child: Text.rich(
                     TextSpan(
                       children: [
                         TextSpan(
                           text:
                               AppLocalizations.of(context)!.alreadyHaveAccount,
-                          style: AppStyle.bold16Black,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         TextSpan(
                           text: AppLocalizations.of(context)!.login,

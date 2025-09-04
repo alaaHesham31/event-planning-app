@@ -20,16 +20,16 @@
 "bookClub" : "نادي الكتاب",
 "workShop" : "ورشة عمل",
 "exhibition" : "معرض",
-"searchForEvent" : "ايحث عن موعد",
+"searchForEvent" : "ابحث عن موعد",
 "logout" : "تسجيل خروج",
 "email" : "البريد الالكتروني",
-"password" : "كلمية المرور",
+"password" : "كلمة المرور",
 "forgotPassword" : "هل نسيت كلمة المرور ؟",
 "doNotHaveAcc": "لا تملك حساب ؟",
 "createAccount" : "أنشئ حساب",
 "login" : "تسجيل دخول",
 "or" : "أو",
-"loginWithGoogle" : "الدخول باستخدام جوحل",
+"loginWithGoogle" : "الدخول باستخدام جوجل",
 "name" : "الاسم",
 "rePassword" : "أعد ادخال كلمة المرور",
 "register" : "التسجيل",
@@ -66,9 +66,16 @@
 "passwordTooShort": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
 "invalidEmail": "أدخل بريدًا إلكترونيًا صالحًا",
 "pleaseEnterEventTitle": "من فضلك أدخل عنوان الحدث",
-  "pleaseEnterEventDescription": "من فضلك أدخل وصف الحدث",
-  "eventDetails": "تفاصيل الحدث",
-  "editEvent": "تعديل الحدث",
-  "updateEvent": "تحديث الحدث"
+"pleaseEnterEventDescription": "من فضلك أدخل وصف الحدث",
+"eventDetails": "تفاصيل الحدث",
+"editEvent": "تعديل الحدث",
+"updateEvent": "تحديث الحدث",
+"viewDetails": "اعرض التفاصيل",
+"deleteEvent": "حذف الحدث",
+"areYouSureYouWantToDeleteThisEvent": "هل أنت متأكد من أنك تريد حذف هذا الحدث؟",
+"cancel":"الغاء",
+"delete": "حذف"
+
+
 
 }

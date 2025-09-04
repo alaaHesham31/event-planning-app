@@ -69,7 +69,13 @@
 "pleaseEnterEventDescription": "Please enter event description",
 "eventDetails": "Event Details",
 "editEvent": "Edit Event",
-"updateEvent": "Update Event"
+"updateEvent": "Update Event",
+"viewDetails": "View Details",
+"deleteEvent": "Delete Event",
+"areYouSureYouWantToDeleteThisEvent":"Are you sure you want to delete this event?",
+"cancel":"Cancel",
+"delete": "Delete"
+
 
 
 

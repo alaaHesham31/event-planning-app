@@ -6,6 +6,19 @@ class AppTheme {
   static final ThemeData lightTheme = ThemeData(
     primaryColor: AppColors.primaryColor,
     scaffoldBackgroundColor: AppColors.nodeWhiteColor,
+    appBarTheme: AppBarTheme(
+        backgroundColor: AppColors.nodeWhiteColor,
+      iconTheme: IconThemeData(
+          color: AppColors.whiteColor
+      ),
+    ),
+    textTheme: TextTheme(
+      bodyMedium: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        color: Colors.black, // Light theme color
+      ),
+    ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: AppColors.primaryColor,
       showUnselectedLabels: true,
@@ -25,6 +38,19 @@ class AppTheme {
   static final ThemeData darkTheme = ThemeData(
     primaryColor: AppColors.navyColor,
     scaffoldBackgroundColor: AppColors.navyColor,
+    appBarTheme: AppBarTheme(
+      backgroundColor: AppColors.navyColor,
+      iconTheme: IconThemeData(
+        color: AppColors.primaryColor
+      ),
+    ),
+    textTheme: TextTheme(
+      bodyMedium: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        color: Colors.white, // Dark theme color
+      ),
+    ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: AppColors.navyColor,
       showUnselectedLabels: true,

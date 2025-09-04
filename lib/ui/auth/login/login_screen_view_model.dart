@@ -36,9 +36,7 @@ class LoginScreenViewModel extends ChangeNotifier {
       final uid = credential.user?.uid;
 
       if (uid == null || uid.isEmpty) {
-        navigator.showMsg(
-            'Login failed: Invalid user ID.',
-            AppColors.redColor);
+        navigator.showMsg('Login failed: Invalid user ID.', AppColors.redColor);
         return;
       }
 
@@ -52,6 +50,12 @@ class LoginScreenViewModel extends ChangeNotifier {
 
       userProvider.updateUser(user);
       navigator.showMsg('Login successful', AppColors.greenColor);
+      // final token = await NotificationManager.getDeviceToken();
+      // if (token != null) {
+      //   print("=======$token");
+      //   await FirebaseUtils.saveDeviceToken(userProvider.currentUser!.id, token);
+      // }
+
       navigator.navigateToHome();
 
       // Update selected index after login success
@@ -64,9 +68,11 @@ class LoginScreenViewModel extends ChangeNotifier {
       } else {
         navigator.showMsg(
             'FirebaseAuth error: ${e.message}', AppColors.redColor);
+        print('FirebaseAuth error: ${e.message}');
       }
     } catch (e) {
       navigator.showMsg('Unexpected error: $e', AppColors.redColor);
+      print('Unexpected error: $e');
     } finally {
       authProvider.setLoading(false);
     }

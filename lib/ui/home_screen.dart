@@ -36,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return SafeArea(
       child: Scaffold(
-      
         body: tabs[selectedIndex],
         bottomNavigationBar: Theme(
           data: Theme.of(context).copyWith(
@@ -93,9 +92,11 @@ class _HomeScreenState extends State<HomeScreen> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.pushNamed(context, AddEventScreen.routeName);
-            var userProvider = Provider.of<UserProvider>(context, listen: false);
+            var userProvider =
+                Provider.of<UserProvider>(context, listen: false);
 
-            eventListProvider.changeSelectedIndex(0, userProvider.currentUser!.id);
+            eventListProvider.changeSelectedIndex(
+                0, userProvider.currentUser!.id);
           },
           child: Icon(
             Icons.add,

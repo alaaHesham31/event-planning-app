@@ -1,4 +1,5 @@
 import 'package:evently_app/model/event_model.dart';
+import 'package:evently_app/providers/app_theme_provider.dart';
 import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/tabs/home_tab/edit_event_screen.dart';
@@ -28,6 +29,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as EventModel;
     final userProvider = Provider.of<UserProvider>(context);
+    final themeProvider = Provider.of<AppThemeProvider>(context, listen: false);
+
     final event = Provider.of<EventListProvider>(context)
         .getEventById(args.id);
 
@@ -44,7 +47,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         ),
         iconTheme: IconThemeData(color: AppColors.primaryColor),
         centerTitle: true,
-        backgroundColor: AppColors.nodeWhiteColor,
         actions: [
           IconButton(
             onPressed: () {
@@ -60,15 +62,15 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               final confirm = await showDialog<bool>(
                 context: context,
                 builder: (_) => AlertDialog(
-                  title: Text("Delete Event"),
-                  content: Text("Are you sure you want to delete this event?"),
+                  title: Text(AppLocalizations.of(context)!.deleteEvent),
+                  content: Text(AppLocalizations.of(context)!.areYouSureYouWantToDeleteThisEvent),
                   actions: [
                     TextButton(
                         onPressed: () => Navigator.pop(context, false),
-                        child: Text("Cancel")),
+                        child: Text(AppLocalizations.of(context)!.cancel)),
                     TextButton(
                         onPressed: () => Navigator.pop(context, true),
-                        child: Text("Delete")),
+                        child: Text(AppLocalizations.of(context)!.delete)),
                   ],
                 ),
               );
@@ -131,7 +133,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       ),
                       child: Icon(
                         Icons.calendar_month,
-                        color: AppColors.whiteColor,
+                        color: themeProvider.isLightTheme()
+                            ? AppColors.whiteColor
+                            : AppColors.navyColor,
                       ),
                     ),
                     SizedBox(
@@ -146,7 +150,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                         ),
                         Text(
                           event.eventTime,
-                          style: AppStyle.semi16Black,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
                     ),
@@ -174,7 +178,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       ),
                       child: Icon(
                         Icons.my_location,
-                        color: AppColors.whiteColor,
+                        color: themeProvider.isLightTheme()
+                            ? AppColors.whiteColor
+                            : AppColors.navyColor,
                       ),
                     ),
                     SizedBox(
@@ -241,14 +247,14 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               ),
               Text(
                 AppLocalizations.of(context)!.description,
-                style: AppStyle.semi16Black,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
               SizedBox(
                 height: 12,
               ),
               Text(
                 event.description,
-                style: AppStyle.semi16Black,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
           ),

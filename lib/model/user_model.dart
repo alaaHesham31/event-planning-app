@@ -6,13 +6,15 @@ class MyUser {
 
   String? country;
   String? city;
+  List<String>? deviceTokens;
 
   MyUser(
       {required this.id,
       required this.name,
       required this.email,
-       this.country,
-       this.city});
+      this.country,
+      this.city,
+      this.deviceTokens});
 
   MyUser copyWith({
     String? id,
@@ -20,14 +22,15 @@ class MyUser {
     String? email,
     String? country,
     String? city,
+    List<String>? deviceTokens,
   }) {
     return MyUser(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      email: email ?? this.email,
-      country: country ?? this.country,
-      city: city ?? this.city,
-    );
+        id: id ?? this.id,
+        name: name ?? this.name,
+        email: email ?? this.email,
+        country: country ?? this.country,
+        city: city ?? this.city,
+        deviceTokens: deviceTokens ?? this.deviceTokens);
   }
 
   // object => json -- from fire store
@@ -38,6 +41,9 @@ class MyUser {
           email: data['email'],
           country: data['country'],
           city: data['city'],
+          deviceTokens:  data['deviceTokens'] != null
+              ? List<String>.from(data['deviceTokens'])
+              : [],
         );
 
   //object => json -- to fire store
@@ -48,6 +54,7 @@ class MyUser {
       'email': email,
       'country': country,
       'city': city,
+      'deviceTokens': deviceTokens
     };
   }
 }
