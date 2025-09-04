@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:evently_app/ui/lets_go_screen.dart';
+import 'package:evently_app/ui/lets_go/lets_go_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/app_image.dart';
@@ -23,9 +23,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Image.asset(AppImage.eventlyLogo),
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: Image.asset(AppImage.eventlyLogo),
+        ),
       ),
     );
   }

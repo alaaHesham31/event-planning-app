@@ -1,3 +1,4 @@
+import 'package:evently_app/providers/app_theme_provider.dart';
 import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/auth/login/login_navigator.dart';
@@ -45,9 +46,9 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     final authProvider = Provider.of<myAuth.AuthProvider>(context);
+    final appThemeProvider = Provider.of<AppThemeProvider>(context, listen: false);
 
     return Scaffold(
-      backgroundColor: AppColors.nodeWhiteColor,
       body: Padding(
         padding: EdgeInsets.only(
             top: height * 0.1, right: width * 0.04, left: width * 0.04),
@@ -63,18 +64,28 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
                 child: Column(
                   children: [
                     CustomTextField(
-                        controller: viewModel.emailController,
-                        validator: (text) {
-                          if (text == null || text.isEmpty) {
-                            return AppLocalizations.of(context)!.pleaseEnterEmail;
-                          }
-                          return null;
-                        },
-                        textStyle: AppStyle.semi16Grey,
-                        hintText: AppLocalizations.of(context)!.email,
-                        hintTextStyle: AppStyle.semi16Grey,
-                        prefixIcon: Image.asset(AppImage.emailIcon),
-                        borderColor: AppColors.greyColor),
+                      controller: viewModel.emailController,
+                      validator: (text) {
+                        if (text == null || text.isEmpty) {
+                          return AppLocalizations.of(context)!.pleaseEnterEmail;
+                        }
+                        return null;
+                      },
+                      textStyle: appThemeProvider.isLightTheme()
+                          ? AppStyle.semi16Grey
+                          : AppStyle.semi16White,
+                      hintText: AppLocalizations.of(context)!.email,
+                      hintTextStyle: appThemeProvider.isLightTheme()
+                          ? AppStyle.semi16Grey
+                          : AppStyle.semi16White,
+                      prefixIcon: Icon(Icons.email_rounded),
+                      prefixIconColor: appThemeProvider.isLightTheme()
+                          ? AppColors.greyColor
+                          : AppColors.whiteColor,
+                      borderColor: appThemeProvider.isLightTheme()
+                          ? AppColors.greyColor
+                          : AppColors.whiteColor,
+                    ),
                     SizedBox(
                       height: height * 0.02,
                     ),
@@ -82,17 +93,30 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
                       controller: viewModel.passwordController,
                       validator: (text) {
                         if (text == null || text.isEmpty) {
-                          return AppLocalizations.of(context)!.pleaseEnterPassword;
+                          return AppLocalizations.of(context)!
+                              .pleaseEnterPassword;
                         }
                         return null;
                       },
                       obscureText: true,
-                      textStyle: AppStyle.semi16Grey,
+                      textStyle: appThemeProvider.isLightTheme()
+                          ? AppStyle.semi16Grey
+                          : AppStyle.semi16White,
                       hintText: AppLocalizations.of(context)!.password,
-                      hintTextStyle: AppStyle.semi16Grey,
-                      borderColor: AppColors.greyColor,
-                      prefixIcon: Image.asset(AppImage.passwordIcon),
-                      suffixIcon: Image.asset(AppImage.viewIcon),
+                      hintTextStyle: appThemeProvider.isLightTheme()
+                          ? AppStyle.semi16Grey
+                          : AppStyle.semi16White,
+                      borderColor: appThemeProvider.isLightTheme()
+                          ? AppColors.greyColor
+                          : AppColors.whiteColor,
+                      prefixIcon: Icon(Icons.lock_rounded),
+                      prefixIconColor: appThemeProvider.isLightTheme()
+                          ? AppColors.greyColor
+                          : AppColors.whiteColor,
+                      suffixIcon: Icon(Icons.remove_red_eye_rounded),
+                      suffixIconColor: appThemeProvider.isLightTheme()
+                          ? AppColors.greyColor
+                          : AppColors.whiteColor,
                     ),
                     SizedBox(
                       height: height * 0.02,
@@ -142,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
                     children: [
                       TextSpan(
                         text: AppLocalizations.of(context)!.doNotHaveAcc,
-                        style: AppStyle.bold16Black,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       TextSpan(
                         text: AppLocalizations.of(context)!.createAccount,
@@ -190,7 +214,9 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
                 },
                 textStyle: AppStyle.semi20Primary,
                 text: AppLocalizations.of(context)!.loginWithGoogle,
-                backgroundColor: AppColors.nodeWhiteColor,
+                backgroundColor: appThemeProvider.isLightTheme()
+                    ? AppColors.nodeWhiteColor
+                    : AppColors.navyColor,
                 borderSide: AppColors.primaryColor,
                 icon: Image.asset(AppImage.googleIcon),
               ),
