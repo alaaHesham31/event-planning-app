@@ -68,4 +68,13 @@ class FirebaseUtils {
         .get();
     return query.docs.map((doc) => doc.data()).toList();
   }
+
+  static CollectionReference usersCollection =
+  FirebaseFirestore.instance.collection('Users');
+
+  static Future<void> saveDeviceToken(String userId, String token) async {
+    await usersCollection.doc(userId).update({
+      'deviceTokens': FieldValue.arrayUnion([token]),
+    });
+  }
 }
