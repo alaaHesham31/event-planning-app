@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import '../utils/app_image.dart';
 
 class SplashScreen extends StatefulWidget {
-  static const String routeName ='/';
+  static const String routeName = '/';
+
   const SplashScreen({super.key});
 
   @override

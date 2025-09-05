@@ -15,7 +15,8 @@ class MapTabViewModel extends ChangeNotifier {
     _mapController = controller;
   }
 
-  void loadEvents(EventListProvider eventListProvider, UserProvider userProvider, BuildContext context) {
+  void loadEvents(EventListProvider eventListProvider,
+      UserProvider userProvider, BuildContext context) {
     if (eventListProvider.allEventsList.isEmpty) {
       eventListProvider.loadEventCategories(context);
       eventListProvider.loadAllEvents(userProvider.currentUser!.id);

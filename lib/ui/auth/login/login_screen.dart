@@ -46,7 +46,8 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     final authProvider = Provider.of<myAuth.AuthProvider>(context);
-    final appThemeProvider = Provider.of<AppThemeProvider>(context, listen: false);
+    final appThemeProvider =
+        Provider.of<AppThemeProvider>(context, listen: false);
 
     return Scaffold(
       body: Padding(
@@ -113,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> implements LoginNavigator {
                       prefixIconColor: appThemeProvider.isLightTheme()
                           ? AppColors.greyColor
                           : AppColors.whiteColor,
-                      suffixIcon: Icon(Icons.remove_red_eye_rounded),
+                      suffixIcon: Icon(Icons.visibility_off_rounded),
                       suffixIconColor: appThemeProvider.isLightTheme()
                           ? AppColors.greyColor
                           : AppColors.whiteColor,

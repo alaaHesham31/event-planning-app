@@ -30,8 +30,7 @@ class _ThemeBottomSheet extends State<ThemeBottomSheet> {
                   themeProvider.changeAppTheme(AppTheme.darkTheme);
                 },
                 child: themeProvider.appTheme == AppTheme.darkTheme
-                    ? getSelectedItemWidget(
-                        AppLocalizations.of(context)!.dark)
+                    ? getSelectedItemWidget(AppLocalizations.of(context)!.dark)
                     : getUnSelectedItemWidget(
                         AppLocalizations.of(context)!.dark)),
             SizedBox(

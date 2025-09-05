@@ -22,6 +22,7 @@ class SettingsViewModel extends ChangeNotifier {
 
   // Proxy getters
   String get currentLanguage => languageProvider.appLanguage;
+
   ThemeData get currentTheme => themeProvider.appTheme;
 
   // Proxy actions

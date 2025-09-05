@@ -28,7 +28,7 @@ class MapTab extends StatelessWidget {
       child: Consumer3<MapTabViewModel, EventListProvider, UserProvider>(
         builder: (context, vm, eventListProvider, userProvider, _) {
           final themeProvider =
-          Provider.of<AppThemeProvider>(context, listen: false);
+              Provider.of<AppThemeProvider>(context, listen: false);
 
           vm.loadEvents(eventListProvider, userProvider, context);
 
@@ -55,7 +55,7 @@ class MapTab extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       itemCount: eventListProvider.allEventsList.length,
                       separatorBuilder: (context, index) =>
-                      const SizedBox(width: 12),
+                          const SizedBox(width: 12),
                       itemBuilder: (context, index) {
                         final event = eventListProvider.allEventsList[index];
                         return GestureDetector(
@@ -146,8 +146,7 @@ class MapTab extends StatelessWidget {
     );
   }
 
-  Set<Circle> _buildCircles(
-      EventListProvider provider, MapTabViewModel vm) {
+  Set<Circle> _buildCircles(EventListProvider provider, MapTabViewModel vm) {
     return provider.allEventsList.map((event) {
       final isSelected = event.id == vm.selectedEventId;
       return Circle(

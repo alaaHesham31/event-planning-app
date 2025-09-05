@@ -74,10 +74,10 @@
 "deleteEvent": "Delete Event",
 "areYouSureYouWantToDeleteThisEvent":"Are you sure you want to delete this event?",
 "cancel":"Cancel",
-"delete": "Delete"
-
-
-
-
-
+"delete": "Delete",
+ "pickEventLocation": "Pick Event Location",
+ "changeLocationTitle": "Change location?",
+ "changeLocationContent": "Do you want to update your location?",
+ "no": "No",
+"yes": "Yes"
 }

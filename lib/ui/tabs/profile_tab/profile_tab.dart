@@ -1,4 +1,3 @@
-
 import 'package:evently_app/providers/app_language_provider.dart';
 import 'package:evently_app/providers/app_theme_provider.dart';
 import 'package:evently_app/providers/event_list_providers.dart';
@@ -7,7 +6,6 @@ import 'package:evently_app/ui/auth/login/login_screen.dart';
 import 'package:evently_app/ui/tabs/profile_tab/language_bottom_sheet.dart';
 import 'package:evently_app/ui/tabs/profile_tab/theme_bottom_sheet.dart';
 import 'package:evently_app/utils/app_colors.dart';
-import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
 import 'package:evently_app/utils/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +20,10 @@ class ProfileTab extends StatefulWidget {
 }
 
 class _ProfileTabState extends State<ProfileTab> {
-
   @override
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserProvider>(context);
- var eventListProvider = Provider.of<EventListProvider>(context);
+    var eventListProvider = Provider.of<EventListProvider>(context);
     var height = MediaQuery.of(context).size.height;
     var languageProvider = Provider.of<AppLanguageProvider>(context);
     var themeProvider = Provider.of<AppThemeProvider>(context);
@@ -41,34 +38,25 @@ class _ProfileTabState extends State<ProfileTab> {
           child: Row(
             // crossAxisAlignment:
             children: [
-              Image.asset(AppImage.profile),
-              SizedBox(
-                width: 16,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      userProvider.currentUser!.name,
-                      style: AppStyle.bold24White,
-                    ),
-                    Text(
-                      userProvider.currentUser!.email,
-                      style: AppStyle.semi16White,
-                      overflow: TextOverflow.visible,
-                      softWrap: true,
-                    ),
-
-                  ],
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    userProvider.currentUser!.name,
+                    style: AppStyle.bold24White,
+                  ),
+                  Text(
+                    userProvider.currentUser!.email,
+                    style: AppStyle.semi16White,
+                    overflow: TextOverflow.visible,
+                    softWrap: true,
+                  ),
+                ],
               )
             ],
           ),
         ),
       ),
-
-
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -76,7 +64,7 @@ class _ProfileTabState extends State<ProfileTab> {
           children: [
             Text(
               AppLocalizations.of(context)!.language,
-              style: AppStyle.bold20Black,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             SizedBox(
               height: height * .02,
@@ -116,7 +104,7 @@ class _ProfileTabState extends State<ProfileTab> {
             ),
             Text(
               AppLocalizations.of(context)!.theme,
-              style: AppStyle.bold20Black,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             SizedBox(
               height: height * .02,
@@ -159,10 +147,8 @@ class _ProfileTabState extends State<ProfileTab> {
                   // Clear all event-related data first
                   eventListProvider.clearCache();
 
-
-
-                  Navigator.pushReplacementNamed( context, LoginScreen.routeName);
-
+                  Navigator.pushReplacementNamed(
+                      context, LoginScreen.routeName);
                 },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(

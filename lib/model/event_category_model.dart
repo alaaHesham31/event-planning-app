@@ -1,8 +1,8 @@
 class EventCategory {
-  final String id;        // Stable key, e.g. "sport"
-  final String name;      // Localized name
-  final String iconPath;  // Icon asset
-  final String? imagePath; // Background image asset
+  final String id;
+  final String name;
+  final String iconPath;
+  final String? imagePath;
 
   EventCategory({
     required this.id,

@@ -31,10 +31,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     final args = ModalRoute.of(context)!.settings.arguments as EventModel;
     final themeProvider = Provider.of<AppThemeProvider>(context, listen: false);
 
-
     return ChangeNotifierProvider<EventDetailsViewModel>(
       create: (_) => EventDetailsViewModel(
-        eventListProvider: Provider.of<EventListProvider>(context, listen: false),
+        eventListProvider:
+            Provider.of<EventListProvider>(context, listen: false),
         userProvider: Provider.of<UserProvider>(context, listen: false),
       )..loadEvent(args.id),
       child: Consumer<EventDetailsViewModel>(
@@ -85,10 +85,12 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                         actions: [
                           TextButton(
                               onPressed: () => Navigator.pop(context, false),
-                              child: Text(AppLocalizations.of(context)!.cancel)),
+                              child:
+                                  Text(AppLocalizations.of(context)!.cancel)),
                           TextButton(
                               onPressed: () => Navigator.pop(context, true),
-                              child: Text(AppLocalizations.of(context)!.delete)),
+                              child:
+                                  Text(AppLocalizations.of(context)!.delete)),
                         ],
                       ),
                     );
@@ -170,7 +172,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             children: [
               Text(DateFormat('dd-MM-yyyy').format(event.eventDate),
                   style: AppStyle.semi16Primary),
-              Text(event.eventTime, style: Theme.of(context).textTheme.bodyMedium),
+              Text(event.eventTime,
+                  style: Theme.of(context).textTheme.bodyMedium),
             ],
           ),
         ],
@@ -201,7 +204,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             ),
           ),
           const SizedBox(width: 16),
-          Text('${event.city} , ${event.country}', style: AppStyle.semi16Primary),
+          Text('${event.city} , ${event.country}',
+              style: AppStyle.semi16Primary),
           const Spacer(),
           const Icon(Icons.arrow_forward_ios_rounded,
               color: AppColors.primaryColor, size: 20),
@@ -229,13 +233,15 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
           child: GoogleMap(
-            initialCameraPosition: CameraPosition(target: event.location, zoom: 10),
+            initialCameraPosition:
+                CameraPosition(target: event.location, zoom: 10),
             onMapCreated: (controller) => mapController = controller,
             markers: {
               Marker(
                 markerId: const MarkerId('displayed'),
                 position: event.location,
-                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueRed),
               ),
             },
             zoomControlsEnabled: false,

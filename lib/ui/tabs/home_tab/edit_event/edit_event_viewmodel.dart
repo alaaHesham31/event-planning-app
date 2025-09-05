@@ -49,7 +49,8 @@ class EditEventViewModel extends ChangeNotifier {
     selectedCity = args.city;
     selectedCountry = args.country;
 
-    final index = eventListProvider.categoryEventsNameList.indexOf(selectedEvent);
+    final index =
+        eventListProvider.categoryEventsNameList.indexOf(selectedEvent);
     if (index != -1) {
       eventListProvider.changeSelectedIndex(
         index,
@@ -61,15 +62,16 @@ class EditEventViewModel extends ChangeNotifier {
   }
 
   void chooseDate(BuildContext context) async {
-    var picked = await showDatePicker(
+    final pickedDate = await showDatePicker(
       context: context,
       initialDate: selectedDate ?? DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 356)),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
     );
-    if (picked != null) {
-      selectedDate = picked;
-      formattedDate = DateFormat('dd/MM/yyyy').format(picked);
+
+    if (pickedDate != null) {
+      selectedDate = pickedDate;
+      formattedDate = DateFormat('dd/MM/yyyy').format(selectedDate!);
       notifyListeners();
     }
   }

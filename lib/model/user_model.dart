@@ -41,7 +41,7 @@ class MyUser {
           email: data['email'],
           country: data['country'],
           city: data['city'],
-          deviceTokens:  data['deviceTokens'] != null
+          deviceTokens: data['deviceTokens'] != null
               ? List<String>.from(data['deviceTokens'])
               : [],
         );

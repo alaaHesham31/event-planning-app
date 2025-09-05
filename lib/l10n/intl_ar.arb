@@ -74,7 +74,13 @@
 "deleteEvent": "حذف الحدث",
 "areYouSureYouWantToDeleteThisEvent": "هل أنت متأكد من أنك تريد حذف هذا الحدث؟",
 "cancel":"الغاء",
-"delete": "حذف"
+"delete": "حذف",
+"pickEventLocation": "اختيار موقع الحدث",
+"changeLocationTitle": "تغيير الموقع؟",
+  "changeLocationContent": "هل تريد تحديث موقعك؟",
+  "no": "لا",
+  "yes": "نعم"
+
 
 
 

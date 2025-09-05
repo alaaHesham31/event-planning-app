@@ -20,7 +20,8 @@ class SettingsToggles extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(AppLocalizations.of(context)!.language,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
             ToggleButtons(
               borderRadius: BorderRadius.circular(16),
               isSelected: [
@@ -52,7 +53,8 @@ class SettingsToggles extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(AppLocalizations.of(context)!.theme,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
             ToggleButtons(
               borderRadius: BorderRadius.circular(16),
               isSelected: [

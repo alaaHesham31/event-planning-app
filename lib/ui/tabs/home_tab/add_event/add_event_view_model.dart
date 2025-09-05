@@ -1,6 +1,7 @@
 import 'package:evently_app/model/event_model.dart';
 import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/providers/user_provider.dart';
+import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/firebase_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -42,14 +43,14 @@ class AddEventViewModel extends ChangeNotifier {
     if (chooseDate != null) {
       selectedDate = chooseDate;
       formattedDate =
-      "${chooseDate.day}/${chooseDate.month}/${chooseDate.year}";
+          "${chooseDate.day}/${chooseDate.month}/${chooseDate.year}";
       notifyListeners();
     }
   }
 
   void chooseTime(BuildContext context) async {
     var chooseTime =
-    await showTimePicker(context: context, initialTime: TimeOfDay.now());
+        await showTimePicker(context: context, initialTime: TimeOfDay.now());
     if (chooseTime != null) {
       selectedTime = chooseTime;
       formattedTime = chooseTime.format(context);
@@ -77,9 +78,9 @@ class AddEventViewModel extends ChangeNotifier {
         selectedTime != null &&
         pickedLocation != null) {
       final selectedImage =
-      eventListProvider.eventImagesList[eventListProvider.selectedIndex];
-      final selectedEvent =
-      eventListProvider.categoryEventsNameList[eventListProvider.selectedIndex];
+          eventListProvider.eventImagesList[eventListProvider.selectedIndex];
+      final selectedEvent = eventListProvider
+          .categoryEventsNameList[eventListProvider.selectedIndex];
 
       EventModel event = EventModel(
         title: titleController.text,
@@ -93,13 +94,14 @@ class AddEventViewModel extends ChangeNotifier {
         city: selectedCity!,
       );
 
-      await FirebaseUtils.addEvent(userProvider.currentUser!.id, event).then((_) {
+      await FirebaseUtils.addEvent(userProvider.currentUser!.id, event)
+          .then((_) {
         eventListProvider.changeSelectedIndex(0, userProvider.currentUser!.id);
-        navigator.showSnackBar("Event Added Successfully", Colors.green);
+        navigator.showToastMsg("Event Added Successfully", AppColors.greenColor);
         navigator.closeScreen();
       });
     } else {
-      navigator.showSnackBar("Please complete all fields", Colors.red);
+      navigator.showToastMsg("Please complete all fields", AppColors.redColor);
     }
   }
 }
