@@ -2,13 +2,14 @@ import 'package:evently_app/providers/app_theme_provider.dart';
 import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/providers/user_provider.dart';
 import 'package:evently_app/ui/tabs/home_tab/add_event/add_event_view_model.dart';
-import 'package:evently_app/ui/tabs/home_tab/add_event/location_picker_screen.dart';
+import 'package:evently_app/ui/tabs/home_tab/location_picker/location_picker_screen.dart';
 import 'package:evently_app/ui/widgets/custom_elevated_button.dart';
 import 'package:evently_app/ui/widgets/custom_text_field.dart';
 import 'package:evently_app/ui/widgets/tab_event_item.dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
+import 'package:evently_app/utils/toast_msg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -40,7 +41,8 @@ class _AddEventScreenState extends State<AddEventScreen>
   Widget build(BuildContext context) {
     final eventListProvider = Provider.of<EventListProvider>(context);
     final userProvider = Provider.of<UserProvider>(context);
-    final appThemeProvider = Provider.of<AppThemeProvider>(context, listen: false);
+    final appThemeProvider =
+        Provider.of<AppThemeProvider>(context, listen: false);
 
     viewModel.init(eventListProvider, userProvider);
 
@@ -53,7 +55,7 @@ class _AddEventScreenState extends State<AddEventScreen>
     return ChangeNotifierProvider(
       create: (_) => viewModel,
       child: Consumer<AddEventViewModel>(
-        builder: (context, vm, child) {
+        builder: (context, viewModel, child) {
           return SafeArea(
             child: Scaffold(
               appBar: AppBar(
@@ -69,7 +71,7 @@ class _AddEventScreenState extends State<AddEventScreen>
                     vertical: height * 0.02, horizontal: width * 0.04),
                 child: SingleChildScrollView(
                   child: Form(
-                    key: vm.formKey,
+                    key: viewModel.formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -128,7 +130,7 @@ class _AddEventScreenState extends State<AddEventScreen>
                         SizedBox(height: height * 0.02),
 
                         CustomTextField(
-                          controller: vm.titleController,
+                          controller: viewModel.titleController,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
                               return AppLocalizations.of(context)!
@@ -158,7 +160,7 @@ class _AddEventScreenState extends State<AddEventScreen>
                         SizedBox(height: height * 0.02),
 
                         CustomTextField(
-                          controller: vm.descriptionController,
+                          controller: viewModel.descriptionController,
                           validator: (text) {
                             if (text == null || text.isEmpty) {
                               return AppLocalizations.of(context)!
@@ -194,11 +196,11 @@ class _AddEventScreenState extends State<AddEventScreen>
                             Text(AppLocalizations.of(context)!.eventDate),
                             Spacer(),
                             InkWell(
-                              onTap: () => vm.chooseDate(context),
+                              onTap: () => viewModel.chooseDate(context),
                               child: Text(
-                                vm.selectedDate == null
+                                viewModel.selectedDate == null
                                     ? AppLocalizations.of(context)!.chooseDate
-                                    : vm.formattedDate,
+                                    : viewModel.formattedDate,
                                 style: AppStyle.semi16Primary,
                               ),
                             ),
@@ -219,11 +221,11 @@ class _AddEventScreenState extends State<AddEventScreen>
                             Text(AppLocalizations.of(context)!.eventTime),
                             Spacer(),
                             InkWell(
-                              onTap: () => vm.chooseTime(context),
+                              onTap: () => viewModel.chooseTime(context),
                               child: Text(
-                                vm.selectedTime == null
+                                viewModel.selectedTime == null
                                     ? AppLocalizations.of(context)!.chooseTime
-                                    : vm.formattedTime,
+                                    : viewModel.formattedTime,
                                 style: AppStyle.semi16Primary,
                               ),
                             ),
@@ -233,7 +235,7 @@ class _AddEventScreenState extends State<AddEventScreen>
 
                         // Location
                         InkWell(
-                          onTap: () => vm.chooseLocation(context),
+                          onTap: () => viewModel.chooseLocation(context),
                           child: Container(
                             padding: EdgeInsets.all(12),
                             decoration: BoxDecoration(
@@ -259,7 +261,7 @@ class _AddEventScreenState extends State<AddEventScreen>
                                 ),
                                 SizedBox(width: width * 0.02),
                                 Text(
-                                  vm.selectedLocation ??
+                                  viewModel.selectedLocation ??
                                       AppLocalizations.of(context)!
                                           .chooseEventLocation,
                                   style: AppStyle.semi16Primary,
@@ -274,7 +276,7 @@ class _AddEventScreenState extends State<AddEventScreen>
                         SizedBox(height: height * 0.02),
 
                         CustomElevatedButton(
-                          onClick: vm.addEvent,
+                          onClick: viewModel.addEvent,
                           textStyle: AppStyle.semi20White,
                           text: AppLocalizations.of(context)!.addEvent,
                         ),
@@ -291,10 +293,8 @@ class _AddEventScreenState extends State<AddEventScreen>
   }
 
   @override
-  void showSnackBar(String message, Color color) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: color),
-    );
+  void showToastMsg(String message, Color color) {
+    ToastMessage.toastMsg(message, color);
   }
 
   @override

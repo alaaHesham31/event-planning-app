@@ -57,7 +57,6 @@ class EventModel {
     );
   }
 
-
   EventModel.fromFireStore(Map<String, dynamic> data)
       : this(
           id: data['id'] ?? '',
@@ -70,9 +69,8 @@ class EventModel {
           country: data['country'] ?? '',
           city: data['city'] ?? '',
           location: data['location'] != null
-              ? LatLng(
-              (data['location'] as GeoPoint).latitude,
-              (data['location'] as GeoPoint).longitude)
+              ? LatLng((data['location'] as GeoPoint).latitude,
+                  (data['location'] as GeoPoint).longitude)
               : const LatLng(0, 0),
           isFavourite: data['isFavourite'] ?? false,
         );

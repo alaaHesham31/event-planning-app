@@ -2,7 +2,7 @@ import 'package:evently_app/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class AppThemeProvider extends ChangeNotifier {
-  ThemeData appTheme = AppTheme.darkTheme;
+  ThemeData appTheme = AppTheme.lightTheme;
 
   void changeAppTheme(ThemeData newTheme) {
     if (appTheme == newTheme) return;
@@ -10,7 +10,7 @@ class AppThemeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-   bool isLightTheme() {
+  bool isLightTheme() {
     return appTheme == AppTheme.lightTheme;
   }
 }

@@ -18,9 +18,8 @@ class RegisterScreenViewModel extends ChangeNotifier {
   void register() async {
     if (!formKey.currentState!.validate()) return;
 
-      isLoading = true;
+    isLoading = true;
     notifyListeners();
-
 
     try {
       final credential =
@@ -34,25 +33,28 @@ class RegisterScreenViewModel extends ChangeNotifier {
           email: emailController.text);
 
       await FirebaseUtils.addUser(user);
-      navigator.showMsg('Account created successfully',  AppColors.greenColor);
+      navigator.showMsg('Account created successfully', AppColors.greenColor);
       // Optionally navigate or reset form
       navigator.navigateToHome();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        navigator.showMsg('The password provided is too weak.',  AppColors.greyColor);
+        navigator.showMsg(
+            'The password provided is too weak.', AppColors.greyColor);
       } else if (e.code == 'email-already-in-use') {
-        navigator.showMsg('The account already exists for that email.',  AppColors.redColor);
+        navigator.showMsg(
+            'The account already exists for that email.', AppColors.redColor);
       } else if (e.code == 'invalid-email') {
-        navigator.showMsg('The email address is not valid.',  AppColors.redColor);
+        navigator.showMsg(
+            'The email address is not valid.', AppColors.redColor);
       } else {
-        navigator.showMsg('FirebaseAuth error: ${e.message}',  AppColors.redColor);
+        navigator.showMsg(
+            'FirebaseAuth error: ${e.message}', AppColors.redColor);
       }
     } catch (e) {
-      navigator.showMsg('Unexpected error: $e',  AppColors.redColor);
+      navigator.showMsg('Unexpected error: $e', AppColors.redColor);
     } finally {
-        isLoading = false;
-        notifyListeners();
-
+      isLoading = false;
+      notifyListeners();
     }
   }
 }

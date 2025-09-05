@@ -19,7 +19,7 @@ class FavoriteTab extends StatelessWidget {
     var userProvider = Provider.of<UserProvider>(context);
 
     var height = MediaQuery.of(context).size.height;
-    if(eventProviderList.favouriteEventsList.isEmpty){
+    if (eventProviderList.favouriteEventsList.isEmpty) {
       eventProviderList.loadFavourites(userProvider.currentUser!.id);
     }
     return SafeArea(
@@ -43,8 +43,8 @@ class FavoriteTab extends StatelessWidget {
             Expanded(
               child: eventProviderList.favouriteEventsList.isEmpty
                   ? Center(
-                      child: Text(
-                          AppLocalizations.of(context)!.noFavEventFound),
+                      child:
+                          Text(AppLocalizations.of(context)!.noFavEventFound),
                     )
                   : ListView.separated(
                       itemCount: eventProviderList.favouriteEventsList.length,

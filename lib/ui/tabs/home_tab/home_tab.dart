@@ -1,7 +1,9 @@
 import 'package:evently_app/providers/app_language_provider.dart';
 import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/providers/user_provider.dart';
-import 'package:evently_app/ui/tabs/home_tab/event_details_screen.dart';
+import 'package:evently_app/ui/tabs/home_tab/event_details/event_details_screen.dart';
+import 'package:evently_app/ui/tabs/home_tab/home_navigator.dart';
+import 'package:evently_app/ui/tabs/home_tab/home_tab_view_model.dart';
 import 'package:evently_app/ui/widgets/event_item_widget.dart';
 import 'package:evently_app/ui/widgets/tab_event_item.dart';
 import 'package:evently_app/utils/app_colors.dart';
@@ -21,29 +23,58 @@ class HomeTab extends StatefulWidget {
   State<HomeTab> createState() => _HomeTabState();
 }
 
-class _HomeTabState extends State<HomeTab> {
+class _HomeTabState extends State<HomeTab> implements HomeNavigator {
   late UserProvider userProvider;
-  var appThemeProvider;
+  late AppThemeProvider appThemeProvider;
+  bool _initialized = false;
+  late HomeTabViewModel homeTabViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    homeTabViewModel = HomeTabViewModel();
+    homeTabViewModel.navigator = this;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!_initialized) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final eventListProvider =
+            Provider.of<EventListProvider>(context, listen: false);
+        final userProv = Provider.of<UserProvider>(context, listen: false);
+        eventListProvider.initCategories(context);
+        eventListProvider.updateLanguage(context);
+        if (eventListProvider.allEventsList.isEmpty) {
+          try {
+            await eventListProvider.loadAllEvents(userProv.currentUser!.id);
+          } catch (e) {
+            debugPrint('loadAllEvents error: $e');
+          }
+        }
+      });
+
+      _initialized = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    var eventListProvider = Provider.of<EventListProvider>(context);
+    final eventListProvider = Provider.of<EventListProvider>(context);
     userProvider = Provider.of<UserProvider>(context);
-     appThemeProvider = Provider.of<AppThemeProvider>(context, listen: false);
+    appThemeProvider = Provider.of<AppThemeProvider>(context);
 
-
-    if (eventListProvider.allEventsList.isEmpty) {
-      eventListProvider.loadEventCategories(context);
-      eventListProvider.loadAllEvents(userProvider.currentUser!.id);
-    }
-
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
         title: buildAppBarContent(width),
-        backgroundColor: appThemeProvider.isLightTheme()? AppColors.primaryColor: AppColors.navyColor,
+        backgroundColor: appThemeProvider.isLightTheme()
+            ? AppColors.primaryColor
+            : AppColors.navyColor,
       ),
       body: Column(
         children: [
@@ -51,7 +82,9 @@ class _HomeTabState extends State<HomeTab> {
             height: height * 0.11,
             padding: EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
-              color: appThemeProvider.isLightTheme()? AppColors.primaryColor : AppColors.navyColor,
+              color: appThemeProvider.isLightTheme()
+                  ? AppColors.primaryColor
+                  : AppColors.navyColor,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(24),
                 bottomRight: Radius.circular(24),
@@ -65,19 +98,60 @@ class _HomeTabState extends State<HomeTab> {
                       AppImage.mapIcon,
                       height: 20,
                     ),
-                    SizedBox(
-                      width: width * 0.02,
+                    SizedBox(width: width * 0.02),
+                    InkWell(
+                      onTap: () async {
+                        if (userProvider.currentUser!.city == null ||
+                            userProvider.currentUser!.city!.isEmpty) {
+                          await homeTabViewModel.onLocationClicked(context);
+                        } else {
+                          final confirm = await showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: Text(AppLocalizations.of(context)!
+                                  .changeLocationTitle),
+                              content: Text(AppLocalizations.of(context)!
+                                  .changeLocationContent),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  child: Text(AppLocalizations.of(context)!.no),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  child:
+                                      Text(AppLocalizations.of(context)!.yes),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (confirm == true) {
+                            await homeTabViewModel.onLocationClicked(context);
+                          }
+                        }
+                      },
+                      child: Text(
+                        (userProvider.currentUser!.city == null ||
+                                userProvider.currentUser!.city!.isEmpty)
+                            ? "Set your location"
+                            : "${userProvider.currentUser!.city}, ${userProvider.currentUser!.country}",
+                        style: (userProvider.currentUser!.city == null ||
+                                userProvider.currentUser!.city!.isEmpty)
+                            ? AppStyle.bold14White.copyWith(
+                                decoration: TextDecoration.underline,
+                                color: Colors.yellowAccent,
+                              )
+                            : AppStyle.semi16White,
+                      ),
                     ),
-                    Text(
-                      'Cairo , Egypt',
-                      style: AppStyle.semi16White,
-                    )
                   ],
                 ),
                 SizedBox(
                   height: height * 0.02,
                 ),
-                Expanded(
+                SizedBox(
+                  height: height * 0.06,
                   child: ListView.builder(
                     padding: EdgeInsets.only(bottom: 16),
                     scrollDirection: Axis.horizontal,
@@ -89,11 +163,20 @@ class _HomeTabState extends State<HomeTab> {
                               index, userProvider.currentUser!.id);
                         },
                         child: TabEventItem(
-                          backgroundSelectedColor:appThemeProvider.isLightTheme()? AppColors.whiteColor : AppColors.primaryColor,
-                          borderUnSelectedColor: appThemeProvider.isLightTheme()? AppColors.whiteColor : AppColors.primaryColor,
-                          selectedIconColor: appThemeProvider.isLightTheme()? AppColors.primaryColor : AppColors.whiteColor,
+                          backgroundSelectedColor:
+                              appThemeProvider.isLightTheme()
+                                  ? AppColors.whiteColor
+                                  : AppColors.primaryColor,
+                          borderUnSelectedColor: appThemeProvider.isLightTheme()
+                              ? AppColors.whiteColor
+                              : AppColors.primaryColor,
+                          selectedIconColor: appThemeProvider.isLightTheme()
+                              ? AppColors.primaryColor
+                              : AppColors.whiteColor,
                           unSelectedIconColor: AppColors.whiteColor,
-                          selectedTextStyle: appThemeProvider.isLightTheme()? AppStyle.bold14Primary : AppStyle.bold14White,
+                          selectedTextStyle: appThemeProvider.isLightTheme()
+                              ? AppStyle.bold14Primary
+                              : AppStyle.bold14White,
                           unSelectedTextStyle: AppStyle.bold14White,
                           isSelected: eventListProvider.selectedIndex == index,
                           eventName:
@@ -151,7 +234,8 @@ class _HomeTabState extends State<HomeTab> {
 
   Widget buildAppBarContent(double width) {
     final themeProvider = Provider.of<AppThemeProvider>(context, listen: false);
-    final langProvider = Provider.of<AppLanguageProvider>(context, listen: false);
+    final langProvider =
+        Provider.of<AppLanguageProvider>(context, listen: false);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -195,6 +279,10 @@ class _HomeTabState extends State<HomeTab> {
                 langProvider.changeAppLanguage(
                   langProvider.appLanguage == 'en' ? 'ar' : 'en',
                 );
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Provider.of<EventListProvider>(context, listen: false)
+                      .updateLanguage(context);
+                });
               },
               child: Container(
                 padding: EdgeInsets.all(8),
@@ -211,7 +299,35 @@ class _HomeTabState extends State<HomeTab> {
               ),
             ),
           ],
-        ),      ],
+        ),
+      ],
+    );
+  }
+
+  @override
+  Future<bool?> showLocationDialog() {
+    return showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.changeLocationTitle),
+        content: Text(AppLocalizations.of(context)!.changeLocationContent),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(AppLocalizations.of(context)!.no)),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(AppLocalizations.of(context)!.yes),
+          )
+        ],
+      ),
+    );
+  }
+
+  @override
+  void showSnackBar(String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: color),
     );
   }
 }

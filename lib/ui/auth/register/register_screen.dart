@@ -44,9 +44,8 @@ class _RegisterScreenState extends State<RegisterScreen>
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    final appThemeProvider = Provider.of<AppThemeProvider>(context, listen: false);
-
-
+    final appThemeProvider =
+        Provider.of<AppThemeProvider>(context, listen: false);
 
     return ChangeNotifierProvider(
       create: (context) => viewModel,
@@ -80,35 +79,52 @@ class _RegisterScreenState extends State<RegisterScreen>
                           }
                           return null;
                         },
-                        textStyle: appThemeProvider.isLightTheme()? AppStyle.semi16Grey : AppStyle.semi16White,
+                        textStyle: appThemeProvider.isLightTheme()
+                            ? AppStyle.semi16Grey
+                            : AppStyle.semi16White,
                         hintText: AppLocalizations.of(context)!.name,
-                        hintTextStyle:appThemeProvider.isLightTheme()? AppStyle.semi16Grey : AppStyle.semi16White,
+                        hintTextStyle: appThemeProvider.isLightTheme()
+                            ? AppStyle.semi16Grey
+                            : AppStyle.semi16White,
                         prefixIcon: Icon(Icons.person),
-                        prefixIconColor:  appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
-                        borderColor: appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
+                        prefixIconColor: appThemeProvider.isLightTheme()
+                            ? AppColors.greyColor
+                            : AppColors.whiteColor,
+                        borderColor: appThemeProvider.isLightTheme()
+                            ? AppColors.greyColor
+                            : AppColors.whiteColor,
                       ),
                       SizedBox(
                         height: height * 0.02,
                       ),
                       CustomTextField(
-                          controller: viewModel.emailController,
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return AppLocalizations.of(context)!.pleaseEnterEmail;
-                            }
-                            // Basic email format check
-                            if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                                .hasMatch(text)) {
-                              return AppLocalizations.of(context)!.invalidEmail;
-                            }
-                            return null;
-                          },
-                        textStyle: appThemeProvider.isLightTheme()? AppStyle.semi16Grey : AppStyle.semi16White,
-                          hintText: AppLocalizations.of(context)!.email,
-                        hintTextStyle:appThemeProvider.isLightTheme()? AppStyle.semi16Grey : AppStyle.semi16White,
+                        controller: viewModel.emailController,
+                        validator: (text) {
+                          if (text == null || text.isEmpty) {
+                            return AppLocalizations.of(context)!
+                                .pleaseEnterEmail;
+                          }
+                          // Basic email format check
+                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                              .hasMatch(text)) {
+                            return AppLocalizations.of(context)!.invalidEmail;
+                          }
+                          return null;
+                        },
+                        textStyle: appThemeProvider.isLightTheme()
+                            ? AppStyle.semi16Grey
+                            : AppStyle.semi16White,
+                        hintText: AppLocalizations.of(context)!.email,
+                        hintTextStyle: appThemeProvider.isLightTheme()
+                            ? AppStyle.semi16Grey
+                            : AppStyle.semi16White,
                         prefixIcon: Icon(Icons.email_rounded),
-                        prefixIconColor:  appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
-                        borderColor: appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
+                        prefixIconColor: appThemeProvider.isLightTheme()
+                            ? AppColors.greyColor
+                            : AppColors.whiteColor,
+                        borderColor: appThemeProvider.isLightTheme()
+                            ? AppColors.greyColor
+                            : AppColors.whiteColor,
                       ),
                       SizedBox(
                         height: height * 0.02,
@@ -118,22 +134,33 @@ class _RegisterScreenState extends State<RegisterScreen>
                         obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return AppLocalizations.of(context)!.pleaseEnterPassword;
+                            return AppLocalizations.of(context)!
+                                .pleaseEnterPassword;
                           }
                           if (value.length < 6) {
-                            return AppLocalizations.of(context)!.passwordTooShort;
+                            return AppLocalizations.of(context)!
+                                .passwordTooShort;
                           }
                           return null;
                         },
-                        textStyle: appThemeProvider.isLightTheme()? AppStyle.semi16Grey : AppStyle.semi16White,
+                        textStyle: appThemeProvider.isLightTheme()
+                            ? AppStyle.semi16Grey
+                            : AppStyle.semi16White,
                         hintText: AppLocalizations.of(context)!.password,
-                        hintTextStyle:appThemeProvider.isLightTheme()? AppStyle.semi16Grey : AppStyle.semi16White,
-                        borderColor: appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
+                        hintTextStyle: appThemeProvider.isLightTheme()
+                            ? AppStyle.semi16Grey
+                            : AppStyle.semi16White,
+                        borderColor: appThemeProvider.isLightTheme()
+                            ? AppColors.greyColor
+                            : AppColors.whiteColor,
                         prefixIcon: Icon(Icons.lock_rounded),
-                        prefixIconColor:  appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
-                        suffixIcon: Icon(Icons.remove_red_eye_sharp),
-                        suffixIconColor:  appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
-
+                        prefixIconColor: appThemeProvider.isLightTheme()
+                            ? AppColors.greyColor
+                            : AppColors.whiteColor,
+                        suffixIcon: Icon(Icons.visibility_off_rounded),
+                        suffixIconColor: appThemeProvider.isLightTheme()
+                            ? AppColors.greyColor
+                            : AppColors.whiteColor,
                       ),
                       SizedBox(
                         height: height * 0.02,
@@ -143,23 +170,34 @@ class _RegisterScreenState extends State<RegisterScreen>
                         obscureText: true,
                         validator: (text) {
                           if (text == null || text.isEmpty) {
-                            return AppLocalizations.of(context)!.pleaseEnterPassword;
+                            return AppLocalizations.of(context)!
+                                .pleaseEnterPassword;
                           }
                           if (viewModel.passwordController.text !=
                               viewModel.rePasswordController.text) {
-                            return AppLocalizations.of(context)!.passwordsDoNotMatch;
+                            return AppLocalizations.of(context)!
+                                .passwordsDoNotMatch;
                           }
                           return null;
                         },
-                        textStyle: appThemeProvider.isLightTheme()? AppStyle.semi16Grey : AppStyle.semi16White,
+                        textStyle: appThemeProvider.isLightTheme()
+                            ? AppStyle.semi16Grey
+                            : AppStyle.semi16White,
                         hintText: AppLocalizations.of(context)!.rePassword,
-                        hintTextStyle:appThemeProvider.isLightTheme()? AppStyle.semi16Grey : AppStyle.semi16White,
-                        borderColor: appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
+                        hintTextStyle: appThemeProvider.isLightTheme()
+                            ? AppStyle.semi16Grey
+                            : AppStyle.semi16White,
+                        borderColor: appThemeProvider.isLightTheme()
+                            ? AppColors.greyColor
+                            : AppColors.whiteColor,
                         prefixIcon: Icon(Icons.lock_rounded),
-                        prefixIconColor:  appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
-                        suffixIcon: Icon(Icons.remove_red_eye_sharp),
-                        suffixIconColor:  appThemeProvider.isLightTheme()? AppColors.greyColor : AppColors.whiteColor,
-
+                        prefixIconColor: appThemeProvider.isLightTheme()
+                            ? AppColors.greyColor
+                            : AppColors.whiteColor,
+                        suffixIcon: Icon(Icons.visibility_off_rounded),
+                        suffixIconColor: appThemeProvider.isLightTheme()
+                            ? AppColors.greyColor
+                            : AppColors.whiteColor,
                       ),
                       SizedBox(
                         height: height * 0.08,

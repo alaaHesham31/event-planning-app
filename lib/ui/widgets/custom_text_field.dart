@@ -5,20 +5,20 @@ import 'package:flutter/material.dart';
 typedef MyValidator = String? Function(String?)?;
 
 class CustomTextField extends StatelessWidget {
-  String? hintText;
-  TextStyle? hintTextStyle;
-  TextStyle? textStyle;
-  Widget? suffixIcon;
-  Widget? prefixIcon;
-  Color borderColor;
-  int? maxLines;
-  bool? obscureText;
-  MyValidator validator;
-  TextEditingController? controller;
-  Color? prefixIconColor;
-  Color? suffixIconColor;
+  final String? hintText;
+  final TextStyle? hintTextStyle;
+  final TextStyle? textStyle;
+  final Widget? suffixIcon;
+  final Widget? prefixIcon;
+  final Color borderColor;
+  final int? maxLines;
+  final bool? obscureText;
+  final MyValidator validator;
+  final TextEditingController? controller;
+  final Color? prefixIconColor;
+  final Color? suffixIconColor;
 
-  CustomTextField(
+  const  CustomTextField(
       {super.key,
       required this.textStyle,
       required this.hintText,

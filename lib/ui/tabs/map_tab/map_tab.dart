@@ -1,138 +1,103 @@
 import 'package:collection/collection.dart';
-import 'package:evently_app/manager/location_manager.dart';
 import 'package:evently_app/model/event_model.dart';
 import 'package:evently_app/providers/app_theme_provider.dart';
 import 'package:evently_app/providers/event_list_providers.dart';
 import 'package:evently_app/providers/user_provider.dart';
-import 'package:evently_app/ui/tabs/home_tab/event_details_screen.dart';
+import 'package:evently_app/ui/tabs/home_tab/event_details/event_details_screen.dart';
+import 'package:evently_app/ui/tabs/map_tab/map_tab_view_model..dart';
 import 'package:evently_app/utils/app_colors.dart';
 import 'package:evently_app/utils/app_image.dart';
 import 'package:evently_app/utils/app_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
-class MapTab extends StatefulWidget {
+class MapTab extends StatelessWidget {
   const MapTab({super.key});
 
-  @override
-  State<MapTab> createState() => _MapTabState();
-}
-
-class _MapTabState extends State<MapTab> {
   final CameraPosition _initialPosition = const CameraPosition(
     zoom: 10,
     target: LatLng(30.02, 31.14),
   );
 
-  GoogleMapController? _mapController;
-
-  String? _selectedEventId; // Track which circle is selected
-
   @override
   Widget build(BuildContext context) {
-    var eventListProvider = Provider.of<EventListProvider>(context);
-    var userProvider = Provider.of<UserProvider>(context);
-   var  themeProvider = Provider.of<AppThemeProvider>(context, listen: false);
+    return ChangeNotifierProvider(
+      create: (_) => MapTabViewModel(),
+      child: Consumer3<MapTabViewModel, EventListProvider, UserProvider>(
+        builder: (context, vm, eventListProvider, userProvider, _) {
+          final themeProvider =
+              Provider.of<AppThemeProvider>(context, listen: false);
 
-    if (eventListProvider.allEventsList.isEmpty) {
-      eventListProvider.loadEventCategories(context);
-      eventListProvider.loadAllEvents(userProvider.currentUser!.id);
-    }
+          vm.loadEvents(eventListProvider, userProvider, context);
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          GoogleMap(
-            myLocationButtonEnabled: false,
-            myLocationEnabled: false,
-            zoomControlsEnabled: false,
-            initialCameraPosition: _initialPosition,
-            circles: _buildCircles(eventListProvider),
-            onMapCreated: (controller) {
-              _mapController = controller;
-            },
-          ),
-          if (_selectedEventId != null) _buildInfoWindow(eventListProvider),
-          Positioned(
-            bottom: 32,
-            left: 24,
-            right: 0,
-            child: SizedBox(
-              height: 110,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: eventListProvider.allEventsList.length,
-                separatorBuilder: (context, index) => const SizedBox(width: 12),
-                itemBuilder: (context, index) {
-                  final event = eventListProvider.allEventsList[index];
-                  return GestureDetector(
-                    onTap: () {
-                      _onEventCardTap(event);
-                    },
-                    child: _buildEventItem(event: event),
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12.0),
-        child: FloatingActionButton(
-          onPressed: () async {
-            var location = await LocationManager.getCurrentLocation();
-
-            if (_mapController != null) {
-              _mapController!.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: LatLng(location.latitude, location.longitude),
-                    zoom: 16,
+          return Scaffold(
+            body: Stack(
+              children: [
+                GoogleMap(
+                  myLocationButtonEnabled: false,
+                  myLocationEnabled: false,
+                  zoomControlsEnabled: false,
+                  initialCameraPosition: _initialPosition,
+                  circles: _buildCircles(eventListProvider, vm),
+                  onMapCreated: vm.setMapController,
+                ),
+                if (vm.selectedEventId != null)
+                  _buildInfoWindow(context, eventListProvider, vm),
+                Positioned(
+                  bottom: 32,
+                  left: 24,
+                  right: 0,
+                  child: SizedBox(
+                    height: 110,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: eventListProvider.allEventsList.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(width: 12),
+                      itemBuilder: (context, index) {
+                        final event = eventListProvider.allEventsList[index];
+                        return GestureDetector(
+                          onTap: () => vm.onEventSelected(event),
+                          child: _buildEventItem(event, context),
+                        );
+                      },
+                    ),
                   ),
                 ),
-              );
-            }
-          },
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          backgroundColor: AppColors.primaryColor,
-          child:  Icon(
-            Icons.my_location,
-            color: themeProvider.isLightTheme()
-                ? AppColors.whiteColor
-                : AppColors.navyColor,
-            size: 32,
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-    );
-  }
-
-  void _onEventCardTap(EventModel event) {
-    final newLatLng = LatLng(event.location.latitude, event.location.longitude);
-
-    setState(() {
-      _selectedEventId = event.id; // Highlight circle
-    });
-
-    _mapController?.animateCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(target: newLatLng, zoom: 16),
+              ],
+            ),
+            floatingActionButton: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              child: FloatingActionButton(
+                onPressed: vm.moveToUserLocation,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
+                backgroundColor: AppColors.primaryColor,
+                child: Icon(
+                  Icons.my_location,
+                  color: themeProvider.isLightTheme()
+                      ? AppColors.whiteColor
+                      : AppColors.navyColor,
+                  size: 32,
+                ),
+              ),
+            ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+          );
+        },
       ),
     );
   }
 
-  Widget _buildInfoWindow(EventListProvider provider) {
-    var themeProvider = Provider.of<AppThemeProvider>(context, listen: false);
+  Widget _buildInfoWindow(
+      BuildContext context, EventListProvider provider, MapTabViewModel vm) {
+    final themeProvider = Provider.of<AppThemeProvider>(context, listen: false);
 
     final event = provider.allEventsList
-        .firstWhereOrNull((e) => e.id == _selectedEventId);
+        .firstWhereOrNull((e) => e.id == vm.selectedEventId);
     if (event == null) return const SizedBox.shrink();
 
     return Positioned(
@@ -169,7 +134,10 @@ class _MapTabState extends State<MapTab> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child:  Text(AppLocalizations.of(context)!.viewDetails, style: AppStyle.bold14White,),
+                child: Text(
+                  AppLocalizations.of(context)!.viewDetails,
+                  style: AppStyle.bold14White,
+                ),
               )
             ],
           ),
@@ -178,9 +146,9 @@ class _MapTabState extends State<MapTab> {
     );
   }
 
-  Set<Circle> _buildCircles(EventListProvider provider) {
+  Set<Circle> _buildCircles(EventListProvider provider, MapTabViewModel vm) {
     return provider.allEventsList.map((event) {
-      final isSelected = event.id == _selectedEventId;
+      final isSelected = event.id == vm.selectedEventId;
       return Circle(
         circleId: CircleId(event.id),
         center: LatLng(event.location.latitude, event.location.longitude),
@@ -194,8 +162,8 @@ class _MapTabState extends State<MapTab> {
     }).toSet();
   }
 
-  Widget _buildEventItem({required EventModel event}) {
-    var  themeProvider = Provider.of<AppThemeProvider>(context, listen: false);
+  Widget _buildEventItem(EventModel event, BuildContext context) {
+    final themeProvider = Provider.of<AppThemeProvider>(context, listen: false);
 
     return Container(
       height: 100,
@@ -237,7 +205,9 @@ class _MapTabState extends State<MapTab> {
                   children: [
                     Image.asset(
                       AppImage.mapIcon,
-                      color:themeProvider.isLightTheme() ? AppColors.blackColor : AppColors.whiteColor,
+                      color: themeProvider.isLightTheme()
+                          ? AppColors.blackColor
+                          : AppColors.whiteColor,
                       height: 20,
                     ),
                     const SizedBox(width: 4),

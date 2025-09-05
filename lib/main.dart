@@ -11,9 +11,9 @@ import 'package:evently_app/ui/home_screen.dart';
 import 'package:evently_app/ui/lets_go/lets_go_screen.dart';
 import 'package:evently_app/ui/Onboarding/onboarding_screen.dart';
 import 'package:evently_app/ui/tabs/home_tab/add_event/add_event_screen.dart';
-import 'package:evently_app/ui/tabs/home_tab/edit_event_screen.dart';
-import 'package:evently_app/ui/tabs/home_tab/event_details_screen.dart';
-import 'package:evently_app/ui/tabs/home_tab/add_event/location_picker_screen.dart';
+import 'package:evently_app/ui/tabs/home_tab/edit_event/edit_event_screen.dart';
+import 'package:evently_app/ui/tabs/home_tab/event_details/event_details_screen.dart';
+import 'package:evently_app/ui/tabs/home_tab/location_picker/location_picker_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -27,18 +27,20 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // await FirebaseFirestore.instance.disableNetwork();
 
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => AppThemeProvider()),
       ChangeNotifierProvider(create: (context) => AppLanguageProvider()),
-      ChangeNotifierProvider(create: (context) => EventListProvider()),
       ChangeNotifierProvider(create: (context) => AuthProvider()),
       ChangeNotifierProvider(create: (context) => UserProvider()),
       ChangeNotifierProvider(
+        create: (context) => EventListProvider(),
+      ),
+      ChangeNotifierProvider(
         create: (context) => SettingsViewModel.of(context),
-      ),    ],
+      ),
+    ],
     child: const MyApp(),
   ));
 }
@@ -52,7 +54,7 @@ class MyApp extends StatelessWidget {
     var themeProvider = Provider.of<AppThemeProvider>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: LetsGoScreen.routeName,
+      initialRoute: LoginScreen.routeName,
       routes: {
         SplashScreen.routeName: (context) => SplashScreen(),
         LetsGoScreen.routeName: (context) => LetsGoScreen(),
