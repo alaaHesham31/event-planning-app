@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EventListProvider extends ChangeNotifier {
   int selectedIndex = 0;
+  String? currentLanguageCode;
 
   List<EventModel> allEventsList = [];
   List<EventModel> filteredEventsList = [];
@@ -56,6 +57,20 @@ class EventListProvider extends ChangeNotifier {
     categoryEventsIconList = fullEventsIconList.sublist(1);
   }
 
+  void initCategories(BuildContext context) {
+    loadEventCategories(context);
+    notifyListeners();
+  }
+
+  void updateLanguage(BuildContext context) {
+    final langCode = Localizations.localeOf(context).languageCode;
+    if (currentLanguageCode == langCode) return;
+    currentLanguageCode = langCode;
+
+    loadEventCategories(context);
+    notifyListeners();
+  }
+
   // --- Load Events ---
   Future<void> loadAllEvents(String uId) async {
     allEventsList = await FirebaseUtils.getAllEvents(uId);
@@ -80,13 +95,17 @@ class EventListProvider extends ChangeNotifier {
   Future<void> toggleFavourite(EventModel event, String uId) async {
     await FirebaseUtils.updateEvent(
         uId, event.copyWith(isFavourite: !event.isFavourite));
-    selectedIndex == 0 ? await loadAllEvents(uId) : await filterEventsByCategory(uId);
+    selectedIndex == 0
+        ? await loadAllEvents(uId)
+        : await filterEventsByCategory(uId);
     await loadFavourites(uId);
   }
 
   Future<void> deleteEvent(String eventId, String uId) async {
     await FirebaseUtils.deleteEvent(uId, eventId);
-    selectedIndex == 0 ? await loadAllEvents(uId) : await filterEventsByCategory(uId);
+    selectedIndex == 0
+        ? await loadAllEvents(uId)
+        : await filterEventsByCategory(uId);
     notifyListeners();
   }
 
