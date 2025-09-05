@@ -11,6 +11,40 @@
 
 ---
 
+## 📸 Screenshots
+⚡ *UI polished for light/dark mode & EN/AR localization.*  
+
+### 🌞 Light Mode (EN) – Full Walkthrough
+| Let's go | Onboarding | Login | Register |
+|----------|-------------|-------|----------|
+| ![Splash](screenshots/light/lets_go.png) | ![Onboarding](screenshots/light/onboarding.png) | ![Login](screenshots/light/login.png) | ![Register](screenshots/light/register.png) |
+
+
+| Home Tab | Map Tab | Favorites Tab | Profile Tab |
+|----------|---------|---------------|-------------|
+| ![Home](screenshots/light/home.png) | ![Map](screenshots/light/map.png) | ![Favorites](screenshots/light/favorites.png) | ![Profile](screenshots/light/profile.png) |
+
+| Add Event | Event Details | Edit Event | Location Picker |
+|-----------|---------------|------------|-----------------|
+| ![Add](screenshots/light/add_event.png) | ![Details](screenshots/light/event_details.png) | ![Edit](screenshots/light/edit_event.png) | ![Location Picker](screenshots/light/location_picker.png) |
+
+
+---
+
+### 🌚 Dark Mode (EN)
+| Home | Map | Profile |
+|------|-----|---------|
+| ![Home Dark](screenshots/dark/home.png) | ![Map Dark](screenshots/dark/map.png) | ![Profile Dark](screenshots/dark/profile.png) |
+
+---
+
+### 🌍 Arabic (AR)
+| Home (AR) | Profile (AR) | Event Details (AR) |
+|-----------|----------|--------------|
+| ![Home AR](screenshots/ar/home.png) | ![Map AR](screenshots/ar/profile.png) | ![Profile AR](screenshots/ar/event_details.png) |
+
+---
+
 ## ✨ Features
 - 🔐 **Firebase Authentication** (Email/Password, Google Sign-In)  
 - 🗺 **Google Maps Integration**: View events on a map, circles highlight event location, open directions via `url_launcher`.  
@@ -52,39 +86,6 @@ The app flow is designed for a **smooth user journey**:
 6. **Event Details Screen** → Full details + view on map + option to favorite  
 7. **Edit Event Screen** → Update details and location  
 
----
-
-## 📸 Screenshots
-⚡ *UI polished for light/dark mode & EN/AR localization.*  
-
-### 🌞 Light Mode (EN) – Full Walkthrough
-| Let's go | Onboarding | Login | Register |
-|----------|-------------|-------|----------|
-| ![Splash](screenshots/light/lets_go.png) | ![Onboarding](screenshots/light/onboarding.png) | ![Login](screenshots/light/login.png) | ![Register](screenshots/light/register.png) |
-
-
-| Home Tab | Map Tab | Favorites Tab | Profile Tab |
-|----------|---------|---------------|-------------|
-| ![Home](screenshots/light/home.png) | ![Map](screenshots/light/map.png) | ![Favorites](screenshots/light/favorites.png) | ![Profile](screenshots/light/profile.png) |
-
-| Add Event | Event Details | Edit Event | Location Picker |
-|-----------|---------------|------------|-----------------|
-| ![Add](screenshots/light/add_event.png) | ![Details](screenshots/light/event_details.png) | ![Edit](screenshots/light/edit_event.png) | ![Location Picker](screenshots/light/location_picker.png) |
-
-
----
-
-### 🌚 Dark Mode (EN)
-| Home | Map | Profile |
-|------|-----|---------|
-| ![Home Dark](screenshots/dark/home.png) | ![Map Dark](screenshots/dark/map.png) | ![Profile Dark](screenshots/dark/profile.png) |
-
----
-
-### 🌍 Arabic (AR)
-| Home (AR) | Profile (AR) | Event Details (AR) |
-|-----------|----------|--------------|
-| ![Home AR](screenshots/ar/home.png) | ![Map AR](screenshots/ar/profile.png) | ![Profile AR](screenshots/ar/event_details.png) |
 
 ---
 
