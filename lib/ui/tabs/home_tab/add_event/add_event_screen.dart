@@ -19,8 +19,9 @@ import 'add_event_navigator.dart';
 
 class AddEventScreen extends StatefulWidget {
   static const String routeName = 'addEventScreen';
+  final AddEventViewModel? overrideViewModel;
 
-  const AddEventScreen({super.key});
+  const AddEventScreen({super.key, this.overrideViewModel});
 
   @override
   State<AddEventScreen> createState() => _AddEventScreenState();
@@ -33,18 +34,28 @@ class _AddEventScreenState extends State<AddEventScreen>
   @override
   void initState() {
     super.initState();
-    viewModel = AddEventViewModel();
+    viewModel = widget.overrideViewModel ?? AddEventViewModel();
     viewModel.navigator = this;
   }
 
   @override
   Widget build(BuildContext context) {
+    // If a provider is already given above (like in tests), just use it.
+    final maybeProvided = context.read<AddEventViewModel?>();
+    final effectiveViewModel = maybeProvided ?? viewModel;
+
+    // Always build using the effective viewModel
+    return _buildContent(context, effectiveViewModel);
+  }
+
+  Widget _buildContent(BuildContext context, AddEventViewModel vm) {
     final eventListProvider = Provider.of<EventListProvider>(context);
     final userProvider = Provider.of<UserProvider>(context);
     final appThemeProvider =
         Provider.of<AppThemeProvider>(context, listen: false);
 
-    viewModel.init(eventListProvider, userProvider);
+    // Initialize with providers
+    vm.init(eventListProvider, userProvider);
 
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -52,242 +63,232 @@ class _AddEventScreenState extends State<AddEventScreen>
     final selectedImage =
         eventListProvider.eventImagesList[eventListProvider.selectedIndex];
 
-    return ChangeNotifierProvider(
-      create: (_) => viewModel,
-      child: Consumer<AddEventViewModel>(
-        builder: (context, viewModel, child) {
-          return SafeArea(
-            child: Scaffold(
-              appBar: AppBar(
-                centerTitle: true,
-                title: Text(
-                  AppLocalizations.of(context)!.createEvent,
-                  style: AppStyle.semi20Primary,
-                ),
-                iconTheme: IconThemeData(color: AppColors.primaryColor),
-              ),
-              body: Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: height * 0.02, horizontal: width * 0.04),
-                child: SingleChildScrollView(
-                  child: Form(
-                    key: viewModel.formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Container(
-                          height: height * 0.25,
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Image.asset(selectedImage, fit: BoxFit.fill),
-                        ),
-                        SizedBox(height: height * 0.02),
-                        // Category Tabs
-                        SizedBox(
-                          height: height * 0.07,
-                          child: ListView.builder(
-                            padding: EdgeInsets.only(bottom: 16),
-                            scrollDirection: Axis.horizontal,
-                            itemCount:
-                                eventListProvider.categoryEventsNameList.length,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  eventListProvider.changeSelectedIndex(
-                                      index, userProvider.currentUser!.id);
-                                },
-                                child: TabEventItem(
-                                  backgroundSelectedColor:
-                                      AppColors.primaryColor,
-                                  borderUnSelectedColor: AppColors.primaryColor,
-                                  selectedIconColor:
-                                      appThemeProvider.isLightTheme()
-                                          ? AppColors.whiteColor
-                                          : AppColors.navyColor,
-                                  unSelectedIconColor: AppColors.primaryColor,
-                                  selectedTextStyle:
-                                      appThemeProvider.isLightTheme()
-                                          ? AppStyle.bold14White
-                                          : AppStyle.bold14Black,
-                                  unSelectedTextStyle: AppStyle.bold14Primary,
-                                  isSelected:
-                                      eventListProvider.selectedIndex == index,
-                                  eventName: eventListProvider
-                                      .categoryEventsNameList[index],
-                                  eventIconPath: eventListProvider
-                                      .categoryEventsIconList[index],
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        SizedBox(height: height * 0.02),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            AppLocalizations.of(context)!.createEvent,
+            style: AppStyle.semi20Primary,
+          ),
+          iconTheme: const IconThemeData(color: AppColors.primaryColor),
+        ),
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+              vertical: height * 0.02, horizontal: width * 0.04),
+          child: SingleChildScrollView(
+            child: Form(
+              key: vm.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Image
+                  Container(
+                    height: height * 0.25,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Image.asset(selectedImage, fit: BoxFit.fill),
+                  ),
+                  SizedBox(height: height * 0.02),
 
-                        // Title
-                        Text(AppLocalizations.of(context)!.title),
-                        SizedBox(height: height * 0.02),
-
-                        CustomTextField(
-                          controller: viewModel.titleController,
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return AppLocalizations.of(context)!
-                                  .pleaseEnterEventTitle;
-                            }
-                            return null;
+                  // Category Tabs
+                  SizedBox(
+                    height: height * 0.07,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      scrollDirection: Axis.horizontal,
+                      itemCount:
+                          eventListProvider.categoryEventsNameList.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            eventListProvider.changeSelectedIndex(
+                                index, userProvider.currentUser?.id ?? "");
                           },
-                          textStyle: appThemeProvider.isLightTheme()
-                              ? AppStyle.semi16Grey
-                              : AppStyle.semi16White,
-                          hintText: AppLocalizations.of(context)!.eventTitle,
-                          hintTextStyle: appThemeProvider.isLightTheme()
-                              ? AppStyle.semi16Grey
-                              : AppStyle.semi16White,
-                          borderColor: appThemeProvider.isLightTheme()
-                              ? AppColors.greyColor
-                              : AppColors.whiteColor,
-                          prefixIcon: Icon(Icons.edit),
-                          prefixIconColor: appThemeProvider.isLightTheme()
-                              ? AppColors.greyColor
-                              : AppColors.whiteColor,
-                        ),
-                        SizedBox(height: height * 0.02),
-
-                        // Description
-                        Text(AppLocalizations.of(context)!.description),
-                        SizedBox(height: height * 0.02),
-
-                        CustomTextField(
-                          controller: viewModel.descriptionController,
-                          validator: (text) {
-                            if (text == null || text.isEmpty) {
-                              return AppLocalizations.of(context)!
-                                  .pleaseEnterEventDescription;
-                            }
-                            return null;
-                          },
-                          textStyle: appThemeProvider.isLightTheme()
-                              ? AppStyle.semi16Grey
-                              : AppStyle.semi16White,
-                          maxLines: 4,
-                          hintText:
-                              AppLocalizations.of(context)!.eventDescription,
-                          hintTextStyle: appThemeProvider.isLightTheme()
-                              ? AppStyle.semi16Grey
-                              : AppStyle.semi16White,
-                          borderColor: appThemeProvider.isLightTheme()
-                              ? AppColors.greyColor
-                              : AppColors.whiteColor,
-                        ),
-                        SizedBox(height: height * 0.02),
-
-                        // Date
-                        Row(
-                          children: [
-                            Image.asset(
-                              AppImage.eventDateIcon,
-                              color: appThemeProvider.isLightTheme()
-                                  ? AppColors.blackColor
-                                  : AppColors.whiteColor,
-                            ),
-                            SizedBox(width: width * 0.02),
-                            Text(AppLocalizations.of(context)!.eventDate),
-                            Spacer(),
-                            InkWell(
-                              onTap: () => viewModel.chooseDate(context),
-                              child: Text(
-                                viewModel.selectedDate == null
-                                    ? AppLocalizations.of(context)!.chooseDate
-                                    : viewModel.formattedDate,
-                                style: AppStyle.semi16Primary,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: height * 0.02),
-
-                        // Time
-                        Row(
-                          children: [
-                            Image.asset(
-                              AppImage.eventTimeIcon,
-                              color: appThemeProvider.isLightTheme()
-                                  ? AppColors.blackColor
-                                  : AppColors.whiteColor,
-                            ),
-                            SizedBox(width: width * 0.02),
-                            Text(AppLocalizations.of(context)!.eventTime),
-                            Spacer(),
-                            InkWell(
-                              onTap: () => viewModel.chooseTime(context),
-                              child: Text(
-                                viewModel.selectedTime == null
-                                    ? AppLocalizations.of(context)!.chooseTime
-                                    : viewModel.formattedTime,
-                                style: AppStyle.semi16Primary,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: height * 0.02),
-
-                        // Location
-                        InkWell(
-                          onTap: () => viewModel.chooseLocation(context),
-                          child: Container(
-                            padding: EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: AppColors.primaryColor),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: height * 0.012,
-                                      horizontal: width * 0.025),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: AppColors.primaryColor,
-                                  ),
-                                  child: Icon(
-                                    Icons.my_location,
-                                    color: appThemeProvider.isLightTheme()
-                                        ? AppColors.whiteColor
-                                        : AppColors.navyColor,
-                                  ),
-                                ),
-                                SizedBox(width: width * 0.02),
-                                Text(
-                                  viewModel.selectedLocation ??
-                                      AppLocalizations.of(context)!
-                                          .chooseEventLocation,
-                                  style: AppStyle.semi16Primary,
-                                ),
-                                Spacer(),
-                                Icon(Icons.arrow_forward_ios_rounded,
-                                    size: 20, color: AppColors.primaryColor),
-                              ],
-                            ),
+                          child: TabEventItem(
+                            backgroundSelectedColor: AppColors.primaryColor,
+                            borderUnSelectedColor: AppColors.primaryColor,
+                            selectedIconColor: appThemeProvider.isLightTheme()
+                                ? AppColors.whiteColor
+                                : AppColors.navyColor,
+                            unSelectedIconColor: AppColors.primaryColor,
+                            selectedTextStyle: appThemeProvider.isLightTheme()
+                                ? AppStyle.bold14White
+                                : AppStyle.bold14Black,
+                            unSelectedTextStyle: AppStyle.bold14Primary,
+                            isSelected:
+                                eventListProvider.selectedIndex == index,
+                            eventName:
+                                eventListProvider.categoryEventsNameList[index],
+                            eventIconPath:
+                                eventListProvider.categoryEventsIconList[index],
                           ),
-                        ),
-                        SizedBox(height: height * 0.02),
-
-                        CustomElevatedButton(
-                          onClick: viewModel.addEvent,
-                          textStyle: AppStyle.semi20White,
-                          text: AppLocalizations.of(context)!.addEvent,
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   ),
-                ),
+                  SizedBox(height: height * 0.02),
+
+                  // Title
+                  Text(AppLocalizations.of(context)!.title),
+                  SizedBox(height: height * 0.02),
+                  CustomTextField(
+                    controller: vm.titleController,
+                    validator: (text) {
+                      if (text == null || text.isEmpty) {
+                        return AppLocalizations.of(context)!
+                            .pleaseEnterEventTitle;
+                      }
+                      return null;
+                    },
+                    textStyle: appThemeProvider.isLightTheme()
+                        ? AppStyle.semi16Grey
+                        : AppStyle.semi16White,
+                    hintText: AppLocalizations.of(context)!.eventTitle,
+                    hintTextStyle: appThemeProvider.isLightTheme()
+                        ? AppStyle.semi16Grey
+                        : AppStyle.semi16White,
+                    borderColor: appThemeProvider.isLightTheme()
+                        ? AppColors.greyColor
+                        : AppColors.whiteColor,
+                    prefixIcon: const Icon(Icons.edit),
+                    prefixIconColor: appThemeProvider.isLightTheme()
+                        ? AppColors.greyColor
+                        : AppColors.whiteColor,
+                  ),
+                  SizedBox(height: height * 0.02),
+
+                  // Description
+                  Text(AppLocalizations.of(context)!.description),
+                  SizedBox(height: height * 0.02),
+                  CustomTextField(
+                    controller: vm.descriptionController,
+                    validator: (text) {
+                      if (text == null || text.isEmpty) {
+                        return AppLocalizations.of(context)!
+                            .pleaseEnterEventDescription;
+                      }
+                      return null;
+                    },
+                    textStyle: appThemeProvider.isLightTheme()
+                        ? AppStyle.semi16Grey
+                        : AppStyle.semi16White,
+                    maxLines: 4,
+                    hintText: AppLocalizations.of(context)!.eventDescription,
+                    hintTextStyle: appThemeProvider.isLightTheme()
+                        ? AppStyle.semi16Grey
+                        : AppStyle.semi16White,
+                    borderColor: appThemeProvider.isLightTheme()
+                        ? AppColors.greyColor
+                        : AppColors.whiteColor,
+                  ),
+                  SizedBox(height: height * 0.02),
+
+                  // Date
+                  Row(
+                    children: [
+                      Image.asset(
+                        AppImage.eventDateIcon,
+                        color: appThemeProvider.isLightTheme()
+                            ? AppColors.blackColor
+                            : AppColors.whiteColor,
+                      ),
+                      SizedBox(width: width * 0.02),
+                      Text(AppLocalizations.of(context)!.eventDate),
+                      const Spacer(),
+                      InkWell(
+                        onTap: () => vm.chooseDate(context),
+                        child: Text(
+                          vm.selectedDate == null
+                              ? AppLocalizations.of(context)!.chooseDate
+                              : vm.formattedDate,
+                          style: AppStyle.semi16Primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: height * 0.02),
+
+                  // Time
+                  Row(
+                    children: [
+                      Image.asset(
+                        AppImage.eventTimeIcon,
+                        color: appThemeProvider.isLightTheme()
+                            ? AppColors.blackColor
+                            : AppColors.whiteColor,
+                      ),
+                      SizedBox(width: width * 0.02),
+                      Text(AppLocalizations.of(context)!.eventTime),
+                      const Spacer(),
+                      InkWell(
+                        onTap: () => vm.chooseTime(context),
+                        child: Text(
+                          vm.selectedTime == null
+                              ? AppLocalizations.of(context)!.chooseTime
+                              : vm.formattedTime,
+                          style: AppStyle.semi16Primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: height * 0.02),
+
+                  // Location
+                  InkWell(
+                    onTap: () => vm.chooseLocation(context),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppColors.primaryColor),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: height * 0.012,
+                                horizontal: width * 0.025),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: AppColors.primaryColor,
+                            ),
+                            child: Icon(
+                              Icons.my_location,
+                              color: appThemeProvider.isLightTheme()
+                                  ? AppColors.whiteColor
+                                  : AppColors.navyColor,
+                            ),
+                          ),
+                          SizedBox(width: width * 0.02),
+                          Text(
+                            vm.selectedLocation ??
+                                AppLocalizations.of(context)!
+                                    .chooseEventLocation,
+                            style: AppStyle.semi16Primary,
+                          ),
+                          const Spacer(),
+                          const Icon(Icons.arrow_forward_ios_rounded,
+                              size: 20, color: AppColors.primaryColor),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: height * 0.02),
+
+                  // Submit
+                  CustomElevatedButton(
+                    onClick: vm.addEvent,
+                    textStyle: AppStyle.semi20White,
+                    text: AppLocalizations.of(context)!.addEvent,
+                  ),
+                ],
               ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
